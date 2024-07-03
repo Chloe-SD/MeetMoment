@@ -28,6 +28,7 @@ function App(): React.JSX.Element {
   };
 
   return (
+
     <SafeAreaView>
       <ScrollView>
         
@@ -35,7 +36,7 @@ function App(): React.JSX.Element {
         <View style={styles.sectionContainer}>
           
           <Image source={require('./src/assets/DonaldsApp.jpg')} style={styles.customImage}/>
-          <Text style={styles.sectionTitle}>Welcome to Donald's MeetMoment App!</Text>
+          <Text style={styles.sectionTitle}>Welcome to Donald's MeetMoment App! cb</Text>
           <Button title='login' onPress={handleLogin} />
           
         </View>
