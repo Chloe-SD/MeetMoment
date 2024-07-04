@@ -16,16 +16,12 @@ import {
   Text,
   View,
 } from 'react-native';
+import HomeScreen from './src/HomeScreen';
+import ProfileScreen from './src/ProfileScreen';
+
 
 
 function App(): React.JSX.Element {
-
- 
-
-  const handleLogin = () => {
-    //TODO: Connect google login API
-    Alert.alert('TODO: connect google login API');
-  };
 
   return (
 
@@ -35,10 +31,9 @@ function App(): React.JSX.Element {
         
         <View style={styles.sectionContainer}>
           
-          <Image source={require('./src/assets/DonaldsApp.jpg')} style={styles.customImage}/>
-          <Text style={styles.sectionTitle}>Welcome to Donald's MeetMoment App! cb</Text>
-          <Button title='login' onPress={handleLogin} />
           
+          <HomeScreen/>
+          <ProfileScreen/>
         </View>
       </ScrollView>
     </SafeAreaView>
