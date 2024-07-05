@@ -5,38 +5,53 @@
  * 
  */
 
-import React from 'react';
+// Import Dependencies
+import React, { useState } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
 import {
-  Alert,
-  Button,
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
+
+// Import Views (Screens) and Object types
 import HomeScreen from './src/HomeScreen';
 import ProfileScreen from './src/ProfileScreen';
+import LoginScreen from './src/LoginScreen';
+import NewMeetingScreen from './src/NewMeetingScreen';
+import RequestsScreen from './src/Requests';
+import { UserProvider, useUser } from './src/context/UserContext';
 
 
+const Tab = createBottomTabNavigator();
 
-function App(): React.JSX.Element {
-
+const App = (): React.JSX.Element => {
   return (
+    <UserProvider>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </UserProvider>
+  );
+};
 
-    <SafeAreaView>
-      <ScrollView>
-        
-        
-        <View style={styles.sectionContainer}>
-          
-          
-          <HomeScreen/>
-          <ProfileScreen/>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+const AppNavigator = () => {
+
+  const { user } = useUser();
+  
+
+  return (user ? (
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="New Meeting" component={NewMeetingScreen} />
+        <Tab.Screen name="Requests" component={RequestsScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+      </Tab.Navigator>
+    ) : (
+      <LoginScreen />
+    )
   );
 }
 
