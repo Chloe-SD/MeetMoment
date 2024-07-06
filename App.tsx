@@ -5,42 +5,53 @@
  * 
  */
 
-import React from 'react';
+// Import Dependencies
+import React, { useState } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
 import {
-  Alert,
-  Button,
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 
+// Import Views (Screens) and Object types
+import HomeScreen from './src/HomeScreen';
+import ProfileScreen from './src/ProfileScreen';
+import LoginScreen from './src/LoginScreen';
+import NewMeetingScreen from './src/NewMeetingScreen';
+import RequestsScreen from './src/Requests';
+import { UserProvider, useUser } from './src/context/UserContext';
 
-function App(): React.JSX.Element {
 
- 
+const Tab = createBottomTabNavigator();
 
-  const handleLogin = () => {
-    //TODO: Connect google login API
-    Alert.alert('TODO: connect google login API');
-  };
-
+const App = (): React.JSX.Element => {
   return (
-    <SafeAreaView>
-      <ScrollView>
-        
-        
-        <View style={styles.sectionContainer}>
-          
-          <Image source={require('./src/assets/DonaldsApp.jpg')} style={styles.customImage}/>
-          <Text style={styles.sectionTitle}>Welcome to Donald's MeetMoment App!</Text>
-          <Button title='login' onPress={handleLogin} />
-          
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <UserProvider>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </UserProvider>
+  );
+};
+
+const AppNavigator = () => {
+
+  const { user } = useUser();
+  
+
+  return (user ? (
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="New Meeting" component={NewMeetingScreen} />
+        <Tab.Screen name="Requests" component={RequestsScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+      </Tab.Navigator>
+    ) : (
+      <LoginScreen />
+    )
   );
 }
 
