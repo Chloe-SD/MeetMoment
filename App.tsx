@@ -9,20 +9,17 @@
 import React, { useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 // Import Views (Screens) and Object types
-import HomeScreen from './src/HomeScreen';
-import ProfileScreen from './src/ProfileScreen';
-import LoginScreen from './src/LoginScreen';
-import NewMeetingScreen from './src/NewMeetingScreen';
-import RequestsScreen from './src/Requests';
+import HomeScreen from './src/screens/HomeScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import NewMeetingScreen from './src/screens/NewMeetingScreen';
+import RequestsScreen from './src/screens/Requests';
 import { UserProvider, useUser } from './src/context/UserContext';
+import CustomHeader from './src/components/CustomHeader';
+
 
 
 const Tab = createBottomTabNavigator();
@@ -38,16 +35,34 @@ const App = (): React.JSX.Element => {
 };
 
 const AppNavigator = () => {
-
   const { user } = useUser();
   
-
   return (user ? (
       <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="New Meeting" component={NewMeetingScreen} />
-        <Tab.Screen name="Requests" component={RequestsScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Home" component={HomeScreen}
+        options={{
+          header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
+        }} 
+      />
+      <Tab.Screen name="New Meeting" component={NewMeetingScreen}
+        options={{
+          header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
+        }} 
+      />
+      <Tab.Screen name="Requests" component={RequestsScreen}
+        options={{
+          header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
+        }} 
+      />
+      <Tab.Screen name="Profile" component={ProfileScreen} 
+        options={{
+          header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
+        }} 
+      />
+
+
+      
+
       </Tab.Navigator>
     ) : (
       <LoginScreen />

@@ -1,6 +1,6 @@
 import { Alert, Button, StyleSheet, Text, View } from "react-native";
-import { User } from "./types";
-import { useUser } from "./context/UserContext";
+import { User } from "../types";
+import { useUser } from "../context/UserContext";
 
 
 
