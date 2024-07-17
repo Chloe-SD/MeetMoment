@@ -5,42 +5,68 @@
  * 
  */
 
-import React from 'react';
-import {
-  Alert,
-  Button,
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+// Import Dependencies
+import React, { useState } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { StyleSheet } from 'react-native';
+
+// Import Views (Screens) and Object types
+import HomeScreen from './src/screens/HomeScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import NewMeetingScreen from './src/screens/NewMeetingScreen';
+import RequestsScreen from './src/screens/Requests';
+import { UserProvider, useUser } from './src/context/UserContext';
+import CustomHeader from './src/components/CustomHeader';
 
 
-function App(): React.JSX.Element {
 
- 
+const Tab = createBottomTabNavigator();
 
-  const handleLogin = () => {
-    //TODO: Connect google login API
-    Alert.alert('TODO: connect google login API');
-  };
-
+const App = (): React.JSX.Element => {
   return (
-    <SafeAreaView>
-      <ScrollView>
-        
-        
-        <View style={styles.sectionContainer}>
-          
-          <Image source={require('./src/assets/DonaldsApp.jpg')} style={styles.customImage}/>
-          <Text style={styles.sectionTitle}>Welcome to Donald's MeetMoment App!</Text>
-          <Button title='login' onPress={handleLogin} />
-          
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <UserProvider>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </UserProvider>
+  );
+};
+
+const AppNavigator = () => {
+  const { user } = useUser();
+  
+  return (user ? (
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen}
+        options={{
+          header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
+        }} 
+      />
+      <Tab.Screen name="New Meeting" component={NewMeetingScreen}
+        options={{
+          header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
+        }} 
+      />
+      <Tab.Screen name="Requests" component={RequestsScreen}
+        options={{
+          header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
+        }} 
+      />
+      <Tab.Screen name="Profile" component={ProfileScreen} 
+        options={{
+          header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
+        }} 
+      />
+
+
+      
+
+      </Tab.Navigator>
+    ) : (
+      <LoginScreen />
+    )
   );
 }
 
