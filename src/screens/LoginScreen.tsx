@@ -1,32 +1,69 @@
-import { Alert, Button, StyleSheet, Text, View } from "react-native";
+import React, { useState } from 'react';
+import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import auth from '@react-native-firebase/auth';
 import { User } from "../types";
 import { useUser } from "../context/UserContext";
 
-
-
 const LoginScreen = () => {
     const { setUser } = useUser();
-    
-    const handleLoginDev = () => {
-      const user: User = { name: 'dev', email: 'dev@dev.com' };
-      setUser(user);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = async () => {
+        try {
+            const userCredential = await auth().signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+            const newUser: User = { name: user.displayName ?? 'User', email: user.email ?? '' };
+            setUser(newUser);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                Alert.alert("Login failed", error.message);
+            } else {
+                Alert.alert("An unknown error occurred");
+            }
+        }
     };
 
-    const handleGoogleLogin = async() => {
-        Alert.alert("TODO: Implement google login API")
+    const handleRegister = async () => {
+        try {
+            const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+            const newUser: User = { name: user.displayName ?? 'User', email: user.email ?? '' };
+            setUser(newUser);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                Alert.alert("Registration failed", error.message);
+            } else {
+                Alert.alert("An unknown error occurred");
+            }
+        }
     };
-
 
     return (
         <View style={styles.container}>
-          <Text style={styles.sectionTitle}>Login Screen</Text>
-          <Button title="login with google" onPress={handleGoogleLogin} />
-          <Button title="Login as 'dev'" onPress={handleLoginDev} />
+            <Text style={styles.sectionTitle}>Login Screen</Text>
+            <TextInput
+                style={styles.input}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+            />
+            <Button title="Login" onPress={handleLogin} />
+            <Button title="Register" onPress={handleRegister} />
         </View>
-      );
-    };
-  
-  const styles = StyleSheet.create({
+    );
+};
+
+const styles = StyleSheet.create({
     container: {
         marginTop: 32,
         paddingHorizontal: 24,
@@ -38,20 +75,14 @@ const LoginScreen = () => {
         fontSize: 24,
         fontWeight: '600',
     },
-    customImage: {
-        width: 350,
-        height: 350
+    input: {
+        width: '100%',
+        padding: 10,
+        marginVertical: 10,
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 5,
     },
-  });
-  
-  export default LoginScreen;
+});
 
-  //return (
-    //     <View style={styles.container}>
-    //         <Text style={styles.sectionTitle}>Login Screen, MeetMoment App</Text>
-    //         <Text>TODO: Implement "Login with Google" API</Text>
-    //         <Button title='login with google' onPress={handleLogin} />
-    //         <Button title='login as dev' onPress={handleLoginDev} />
-    //     </View>
-      
-    // );
+export default LoginScreen;

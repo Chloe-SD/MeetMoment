@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:343181070279:android:26bcc717d93618bbf653e2",
+        "mobilesdk_app_id": "1:343181070279:android:9777db3f9e761cdef653e2",
         "android_client_info": {
-          "package_name": "ca.com.meetMomentFirebase"
+          "package_name": "com.meetmoment"
         }
       },
       "oauth_client": [],

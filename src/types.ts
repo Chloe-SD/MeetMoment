@@ -22,6 +22,13 @@ export interface Day {
 export interface Meeting {
     id: string;
     creatorEmail: string;
-    participants: string[];
+    participants: Participant[];
     days: Day[];
+    title: string;  // It's often useful to have a title for the meeting
+    status: 'pending' | 'confirmed';  // Overall meeting status
+  }
+  
+  export interface Participant {
+    email: string;
+    status: 'pending' | 'submitted' | 'confirmed';
   }

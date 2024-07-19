@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Button, Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useUser } from '../context/UserContext';
 
 
@@ -10,7 +10,6 @@ const HomeScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Home Screen</Text>
-            <Image source={require('../assets/DonaldsApp.jpg')} style={styles.customImage}/>
             <Text style={styles.sectionTitle}>Welcome to Donald's MeetMoment App! cb</Text>
         </View>
       
