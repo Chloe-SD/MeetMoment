@@ -1,31 +1,47 @@
 // src/screens/ProfileScreen.tsx
-import { Button, StyleSheet, Text, View } from "react-native";
+import React, { useState } from 'react';
+import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { useUser } from "../context/UserContext";
-
-
+import { DataManager } from "../utils/DataManager";
 
 const ProfileScreen = () => {
   const { user, setUser } = useUser();
+  const [newName, setNewName] = useState(user?.name || '');
     
-    const handleLogout = () => {
-      setUser(null);
-    };
-
-    if (!user) {
-        //TODO: Determine action if no user is logged in (Should not happen but best to make sure)
-        return null;
-    }
-
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>User Profile</Text>
-            <Text style={styles.info}>Name: {user.name}</Text>
-            <Text style={styles.info}>Email: {user.email}</Text>
-            <Button title='logout' onPress={handleLogout} />
-        </View>
-      
-    );
+  const handleLogout = () => {
+    setUser(null);
   };
+
+  const handleUpdateName = async () => {
+    if (!user) return;
+    try {
+      await DataManager.updateUserName(user.id, newName);
+      setUser({ ...user, name: newName });
+      Alert.alert("Success", "Name updated successfully");
+    } catch (error) {
+      Alert.alert("Error", "Failed to update name. Please try again.");
+    }
+  };
+
+  if (!user) {
+    return null;
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>User Profile</Text>
+      <Text style={styles.info}>Email: {user.email}</Text>
+      <TextInput
+        style={styles.input}
+        value={newName}
+        onChangeText={setNewName}
+        placeholder="Enter new name"
+      />
+      <Button title="Update Name" onPress={handleUpdateName} />
+      <Button title='Logout' onPress={handleLogout} />
+    </View>
+  );
+};
   
   const styles = StyleSheet.create({
     title: {
@@ -41,6 +57,14 @@ const ProfileScreen = () => {
     info: {
         fontSize: 18,
         marginBottom: 8,
+    },
+    input: {
+      width: '100%',
+      padding: 10,
+      marginVertical: 10,
+      borderColor: 'gray',
+      borderWidth: 1,
+      borderRadius: 5,
     },
   });
   

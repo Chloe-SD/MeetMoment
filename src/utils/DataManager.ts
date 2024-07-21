@@ -40,9 +40,23 @@ export class DataManager {
     }
   }
 
+  static async createUserDocument(user: User): Promise<void> {
+    try {
+      const userRef = firestore.collection('users').doc(user.id);
+      await userRef.set({
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      });
+    } catch (error) {
+      console.error('Error creating user document:', error);
+      throw error;
+    }
+  }
+
   static async updateUserName(userId: string, newName: string): Promise<void> {
     try {
-      await firestore().collection('users').doc(userId).update({ name: newName });
+      await firestore.collection('users').doc(userId).update({ name: newName });
       console.log('User name updated successfully!');
     } catch (error) {
       console.error('Error updating user name:', error);
@@ -52,7 +66,7 @@ export class DataManager {
 
   static async fetchUserData(userId: string): Promise<User> {
     try {
-      const userDoc = await firestore().collection('users').doc(userId).get();
+      const userDoc = await firestore.collection('users').doc(userId).get();
       if (userDoc.exists) {
         return userDoc.data() as User;
       } else {
@@ -60,25 +74,6 @@ export class DataManager {
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
-      throw error;
-    }
-  }
-
-  static async createUserDocument(user: any): Promise<void> {
-    try {
-      const userRef = firestore().collection('users').doc(user.uid);
-      const snapshot = await userRef.get();
-
-      if (!snapshot.exists) {
-        await userRef.set({
-          id: user.uid,
-          email: user.email,
-          name: user.displayName || 'User',
-          createdAt: firestore.FieldValue.serverTimestamp(),
-        });
-      }
-    } catch (error) {
-      console.error('Error creating user document:', error);
       throw error;
     }
   }

@@ -4,18 +4,20 @@ import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import auth from '@react-native-firebase/auth';
 import { User } from "../types";
 import { useUser } from "../context/UserContext";
+import { DataManager } from "../utils/DataManager";
 
 const LoginScreen = () => {
     const { setUser } = useUser();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
 
     const handleLogin = async () => {
         try {
             const userCredential = await auth().signInWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-            const newUser: User = { name: user.displayName ?? 'User', email: user.email ?? '' };
-            setUser(newUser);
+            const firebaseUser = userCredential.user;
+            const userData = await DataManager.fetchUserData(firebaseUser.uid);
+            setUser(userData);
         } catch (error: unknown) {
             if (error instanceof Error) {
                 Alert.alert("Login failed", error.message);
@@ -28,8 +30,9 @@ const LoginScreen = () => {
     const handleRegister = async () => {
         try {
             const userCredential = await auth().createUserWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-            const newUser: User = { name: user.displayName ?? 'User', email: user.email ?? '' };
+            const firebaseUser = userCredential.user;
+            const newUser: User = { id: firebaseUser.uid, name: name || 'User', email: firebaseUser.email ?? '' };
+            await DataManager.createUserDocument(newUser);
             setUser(newUser);
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -57,6 +60,12 @@ const LoginScreen = () => {
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Name (for registration)"
+                value={name}
+                onChangeText={setName}
             />
             <Button title="Login" onPress={handleLogin} />
             <Button title="Register" onPress={handleRegister} />

@@ -40,7 +40,7 @@ const AppNavigator = () => {
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged((user) => {
       if (user) {
-        setUser({ name: user.displayName ?? 'User', email: user.email ?? '' });
+        setUser({ name: user.displayName ?? 'User', email: user.email ?? '', id: user.uid ?? '' });
       } else {
         setUser(null);
       }

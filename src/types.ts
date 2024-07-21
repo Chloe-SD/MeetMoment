@@ -1,8 +1,8 @@
 export interface User {
+    id: string;
     name: string;
     email: string;
-    //documents: Document[];  // TODO: Will need to carry a list of docs tied to their profile
-}
+  }
   
 
 // OBJECT INTERFACES FOR SCHEDULES
