@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
-import auth from '@react-native-firebase/auth';
+import { auth } from '../firebase';
 import { User } from "../types";
 import { useUser } from "../context/UserContext";
+import { DataManager } from '../utils/DataManager';
 
 const LoginScreen = () => {
     const { setUser } = useUser();
@@ -12,9 +13,11 @@ const LoginScreen = () => {
     const handleLogin = async () => {
         try {
             const userCredential = await auth().signInWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-            const newUser: User = { name: user.displayName ?? 'User', email: user.email ?? '' };
-            setUser(newUser);
+            const firebaseUser = userCredential.user;
+            if (firebaseUser) {
+                const userData = await DataManager.fetchUserData(firebaseUser.uid);
+                setUser(userData);
+            }
         } catch (error: unknown) {
             if (error instanceof Error) {
                 Alert.alert("Login failed", error.message);
@@ -27,9 +30,12 @@ const LoginScreen = () => {
     const handleRegister = async () => {
         try {
             const userCredential = await auth().createUserWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-            const newUser: User = { name: user.displayName ?? 'User', email: user.email ?? '' };
-            setUser(newUser);
+            const firebaseUser = userCredential.user;
+            if (firebaseUser) {
+                await DataManager.createUserDocument(firebaseUser);
+                const userData = await DataManager.fetchUserData(firebaseUser.uid);
+                setUser(userData);
+            }
         } catch (error: unknown) {
             if (error instanceof Error) {
                 Alert.alert("Registration failed", error.message);

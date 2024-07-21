@@ -1,8 +1,8 @@
 export interface User {
+    id: string;
     name: string;
     email: string;
-    //documents: Document[];  // TODO: Will need to carry a list of docs tied to their profile
-}
+  }
   
 
 // OBJECT INTERFACES FOR SCHEDULES
@@ -21,12 +21,12 @@ export interface Day {
 
 export interface Meeting {
     id: string;
+    title: string;
     creatorEmail: string;
     participants: Participant[];
     days: Day[];
-    title: string;  // It's often useful to have a title for the meeting
-    status: 'pending' | 'confirmed';  // Overall meeting status
-  }
+    status: 'pending' | 'confirmed' | 'cancelled';
+}
   
   export interface Participant {
     email: string;

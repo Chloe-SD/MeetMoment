@@ -1,16 +1,18 @@
-// NewMeetingScreen.tsx
+// sec/screens/NewMeetingScreen.tsx
 import React, { useState } from 'react';
 import { Button, StyleSheet, FlatList } from 'react-native';
 import { Meeting, Participant, Day, TimeBlock } from '../types';
-import { firestore } from '../firebase';
 import MeetingTitleInput from '../components/MeetingTitleInput';
 import ParticipantInput from '../components/ParticipantInput';
 import ParticipantList from '../components/ParticipantList';
 import DateRangePicker from '../components/DateRangePicker';
 import MeetingSchedule from '../components/MeetingSchedule';
+import { useUser } from '../context/UserContext';
+import { DataManager } from '../utils/DataManager';
 
 
 const NewMeetingScreen = () => {
+  const { user } = useUser();
   const [title, setTitle] = useState<string>('');
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [startDate, setStartDate] = useState<Date>(new Date());
@@ -26,7 +28,10 @@ const NewMeetingScreen = () => {
   };
 
   const createMeeting = () => {
-    const currentUserEmail = 'creator@example.com'; // Replace with actual logged-in user's email
+    if (!user){
+      return;
+    }
+    const currentUserEmail = user.email; 
     const newMeeting: Meeting = {
       id: Date.now().toString(),
       creatorEmail: currentUserEmail,
@@ -41,15 +46,15 @@ const NewMeetingScreen = () => {
     setMeeting(newMeeting);
   };
 
-  const saveMeetingToFirebase = async () => {
+  const saveMeetingToDB = async () => {
     if (!meeting) return;
-    try {
-      await firestore.collection('meetings').add(meeting);
-      console.log('Meeting saved successfully!');
-    } catch (error) {
-      console.error('Error saving meeting:', error);
-    }
-  };
+  try {
+    await DataManager.saveMeetingToDatabase(meeting);
+    console.log('Meeting saved successfully!');
+  } catch (error) {
+    console.error('Error saving meeting:', error);
+  }
+};
 
   const generateTimeBlocks = (date: string): TimeBlock[] => {
     let blocks: TimeBlock[] = [];
@@ -131,7 +136,7 @@ const NewMeetingScreen = () => {
         return <Button title="Create Meeting" onPress={createMeeting} />;
       case 'meeting':
         return meeting ? (
-          <MeetingSchedule meeting={meeting} onBlockToggle={handleBlockToggle} onSaveMeeting={saveMeetingToFirebase} />
+          <MeetingSchedule meeting={meeting} onBlockToggle={handleBlockToggle} onSaveMeeting={saveMeetingToDB} />
         ) : null;
       default:
         return null;

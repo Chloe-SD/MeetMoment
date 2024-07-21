@@ -17,6 +17,7 @@
     "@react-native-google-signin/google-signin": "^12.2.1",
     "@react-navigation/bottom-tabs": "^6.6.0",
     "@react-navigation/native": "^6.1.17",
+    "expo-image-picker": "^15.0.7",
     "firebase": "^10.12.3",
     "react": "18.2.0",
     "react-native": "0.74.3",
