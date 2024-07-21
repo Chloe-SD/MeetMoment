@@ -1,13 +1,22 @@
 // ParticipantInput.tsx
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { useUser } from '../context/UserContext';
 
 const ParticipantInput = ({ onAddParticipant }: { onAddParticipant: (email: string) => void }) => {
+  const { user } = useUser();
   const [newEmail, setNewEmail] = useState<string>('');
 
   const handleAddParticipant = () => {
+    if (newEmail && newEmail == user?.email){
+      Alert.alert("You cannot add yourself");
+      setNewEmail('');
+    }
     if (newEmail && newEmail.includes('@')) {
       onAddParticipant(newEmail.trim());
+      setNewEmail('');
+    } else {
+      Alert.alert("Please enter a valid email");
       setNewEmail('');
     }
   };

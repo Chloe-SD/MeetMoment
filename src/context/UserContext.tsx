@@ -1,3 +1,4 @@
+// src/context/UserContext.tsx
 import React, { createContext, useState, ReactNode, useContext } from 'react';
 import { User } from '../types';
 

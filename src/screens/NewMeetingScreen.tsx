@@ -20,6 +20,9 @@ const NewMeetingScreen = () => {
   const [meeting, setMeeting] = useState<Meeting | null>(null);
 
   const addParticipant = (email: string) => {
+    if (email == user?.email) {
+      return;
+    }
     setParticipants([...participants, { email, status: 'pending' }]);
   };
 
