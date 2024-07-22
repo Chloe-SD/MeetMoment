@@ -9,7 +9,7 @@
 import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { StyleSheet } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import auth from '@react-native-firebase/auth';
 
 // Import Views (Screens) and Object types
@@ -57,6 +57,18 @@ const AppNavigator = () => {
         name="Home" 
         component={HomeScreen}
         options={{
+          tabBarIcon: ({focused}) => (
+          <View>
+            <Image 
+              source={require("./src/assets/icons/home.png")}
+              resizeMode="contain"
+              style={{
+                width: 30,
+                height: 30,
+                tintColor: focused ? '#3D90E3' : '#77787C',
+              }}
+            />
+          </View>),
           header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
         }} 
       />
@@ -64,6 +76,18 @@ const AppNavigator = () => {
         name="New Meeting" 
         component={NewMeetingScreen}
         options={{
+            tabBarIcon: ({focused}) => (
+          <View>
+            <Image 
+              source={require("./src/assets/icons/newmeeting.png")}
+              resizeMode="contain"
+              style={{
+                width: 30,
+                height: 30,
+                tintColor: focused ? '#3D90E3' : '#77787C',
+              }}
+            />
+          </View>),
           header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
         }} 
       />
@@ -71,6 +95,18 @@ const AppNavigator = () => {
         name="Requests" 
         component={RequestsScreen}
         options={{
+            tabBarIcon: ({focused}) => (
+          <View>
+            <Image 
+              source={require("./src/assets/icons/request.png")}
+              resizeMode="contain"
+              style={{
+                width: 30,
+                height: 30,
+                tintColor: focused ? '#3D90E3' : '#77787C',
+              }}
+            />
+          </View>),
           header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
         }} 
       />
@@ -78,6 +114,18 @@ const AppNavigator = () => {
         name="Profile" 
         component={ProfileScreen}
         options={{
+            tabBarIcon: ({focused}) => (
+          <View>
+            <Image 
+              source={require("./src/assets/icons/profile.png")}
+              resizeMode="contain"
+              style={{
+                width: 25,
+                height: 25,
+                tintColor: focused ? '#3D90E3' : '#77787C',
+              }}
+            />
+          </View>),
           header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
         }} 
       />

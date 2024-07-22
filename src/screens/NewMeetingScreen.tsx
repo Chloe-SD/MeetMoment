@@ -1,6 +1,6 @@
 // NewMeetingScreen.tsx
 import React, { useState } from 'react';
-import { Button, StyleSheet, FlatList } from 'react-native';
+import { Button, StyleSheet, FlatList, Pressable, Text } from 'react-native';
 import { Meeting, Participant, Day, TimeBlock } from '../types';
 import { firestore } from '../firebase';
 import MeetingTitleInput from '../components/MeetingTitleInput';
@@ -128,7 +128,9 @@ const NewMeetingScreen = () => {
       case 'dateRangePicker':
         return <DateRangePicker startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />;
       case 'createButton':
-        return <Button title="Create Meeting" onPress={createMeeting} />;
+        return <Pressable style={styles.button} onPress={createMeeting}>
+          <Text style={styles.text}>Create Meeting</Text>
+          </Pressable>;
       case 'meeting':
         return meeting ? (
           <MeetingSchedule meeting={meeting} onBlockToggle={handleBlockToggle} onSaveMeeting={saveMeetingToFirebase} />
@@ -150,9 +152,26 @@ const NewMeetingScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#f9f7ff',
     flexGrow: 1,
-    padding: 16,
+    padding: 30,
+    paddingTop: 10,
   },
+  button: {
+    backgroundColor: '#3D90E3', 
+    width: 150,
+    height: 50,
+    padding: 3,
+    marginTop: 30,
+    borderRadius: 5,
+    justifyContent: 'center'
+  },
+  text: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: '600'
+  }
 });
 
 export default NewMeetingScreen;

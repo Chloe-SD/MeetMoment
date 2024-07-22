@@ -16,11 +16,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#f9f7ff',
   },
   appName: {
-    color: '#FFF',
-    fontSize: 20,
+    color: '#3D90E3',
+    fontSize: 24,
+    fontFamily: 'Andale Mono',
     fontWeight: 'bold',
   },
   greeting: {

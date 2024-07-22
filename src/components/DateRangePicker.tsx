@@ -1,6 +1,6 @@
 // DateRangePicker.tsx
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Pressable } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const DateRangePicker = ({ startDate, endDate, setStartDate, setEndDate }: { startDate: Date, endDate: Date, setStartDate: (date: Date) => void, setEndDate: (date: Date) => void }) => {
@@ -26,9 +26,12 @@ const DateRangePicker = ({ startDate, endDate, setStartDate, setEndDate }: { sta
 
   return (
     <View>
-      <View style={styles.datePickerContainer}>
-        <Button title="Select Start Date" onPress={() => showDatePicker('start')} />
-        <Text>{startDate.toDateString()}</Text>
+      <View style={styles.datePickerContainer}>   
+        <Pressable style={styles.button} onPress={() => showDatePicker('start')}>
+          <Text style={styles.text}>Select Start Date</Text> 
+        </Pressable>
+
+        <Text>{startDate.toDateString()}</Text> 
         {showStartPicker && (
           <DateTimePicker
             value={startDate}
@@ -39,7 +42,9 @@ const DateRangePicker = ({ startDate, endDate, setStartDate, setEndDate }: { sta
         )}
       </View>
       <View style={styles.datePickerContainer}>
-        <Button title="Select End Date" onPress={() => showDatePicker('end')} />
+        <Pressable style={styles.button} onPress={() => showDatePicker('end')}>
+          <Text style={styles.text}>Select End Date</Text>
+        </Pressable>
         <Text>{endDate.toDateString()}</Text>
         {showEndPicker && (
           <DateTimePicker
@@ -58,6 +63,21 @@ const styles = StyleSheet.create({
   datePickerContainer: {
     marginBottom: 16,
   },
+  button: {
+    backgroundColor: '#3D90E3', 
+    width: 150,
+    height: 50,
+    padding: 3,
+    marginTop: 30,
+    borderRadius: 5,
+    justifyContent: 'center',
+  },
+  text: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: '600'
+  }
 });
 
 export default DateRangePicker;
