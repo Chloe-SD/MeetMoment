@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "343181070279",
+    "firebase_url": "https://meet-moment-e2280-default-rtdb.firebaseio.com",
+    "project_id": "meet-moment-e2280",
+    "storage_bucket": "meet-moment-e2280.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343181070279:android:9777db3f9e761cdef653e2",
+        "android_client_info": {
+          "package_name": "com.meetmoment"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYZfNjY58A02kY0bOCxUjrMnuVt-dJb_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
