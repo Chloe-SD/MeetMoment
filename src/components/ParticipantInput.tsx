@@ -1,22 +1,13 @@
 // ParticipantInput.tsx
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { useUser } from '../context/UserContext';
+import { View, TextInput, Button, StyleSheet, Pressable, Text } from 'react-native';
 
 const ParticipantInput = ({ onAddParticipant }: { onAddParticipant: (email: string) => void }) => {
-  const { user } = useUser();
   const [newEmail, setNewEmail] = useState<string>('');
 
   const handleAddParticipant = () => {
-    if (newEmail && newEmail == user?.email){
-      Alert.alert("You cannot add yourself");
-      setNewEmail('');
-    }
     if (newEmail && newEmail.includes('@')) {
       onAddParticipant(newEmail.trim());
-      setNewEmail('');
-    } else {
-      Alert.alert("Please enter a valid email");
       setNewEmail('');
     }
   };
@@ -29,7 +20,9 @@ const ParticipantInput = ({ onAddParticipant }: { onAddParticipant: (email: stri
         value={newEmail}
         onChangeText={setNewEmail}
       />
-      <Button title="Add" onPress={handleAddParticipant} />
+      <Pressable style={styles.button} onPress={handleAddParticipant}>
+        <Text style={styles.text}>ADD</Text>
+        </Pressable>
     </View>
   );
 };
@@ -41,12 +34,27 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 40,
+    height: 50,
     borderColor: 'gray',
     borderWidth: 1,
     marginRight: 8,
     paddingHorizontal: 8,
   },
+    button: {
+    backgroundColor: '#3D90E3', 
+    width: 80,
+    height: 50,
+    padding: 3,
+    marginTop: 30,
+    borderRadius: 5,
+    justifyContent: 'center'
+  },
+  text: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: '600'
+  }
 });
 
 export default ParticipantInput;
