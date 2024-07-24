@@ -2,9 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useUser } from '../context/UserContext';
-import { DataManager } from '../utils/DataManager';
+import { FetchMeetings, DeleteMeeting } from '../utils/DataManager';
 import { Meeting } from '../types';
 import MeetingView from './MeetingView';
+import ConfirmedMeetingView from './ConfirmedMeetingView';
 
 const HomeScreen = () => {
     const { user } = useUser();
@@ -18,7 +19,7 @@ const HomeScreen = () => {
 
     const fetchMeetings = async () => {
         try {
-            const fetchedMeetings = await DataManager.fetchMeetings();
+            const fetchedMeetings = await FetchMeetings();
             const filteredMeetings = fetchedMeetings.filter(meeting => 
               (meeting.participants.some(participant => 
                 participant.email === user?.email && participant.status === 'confirmed'
@@ -38,7 +39,7 @@ const HomeScreen = () => {
                 {text: "Cancel", style: "cancel"},
                 { text: "OK", onPress: async () => {
                     try {
-                        await DataManager.deleteMeeting(id);
+                        await DeleteMeeting(id);
                         setMeetings(prevMeetings => prevMeetings.filter(meeting => meeting.id !== id));
                     } catch (error) {
                         Alert.alert("Error", "Failed to delete meeting. Please try again.");
@@ -83,7 +84,8 @@ const HomeScreen = () => {
             />
         </View>
     ) : (
-        <MeetingView meeting={selectedMeeting} onClose={handleCloseMeetingView} />
+        <ConfirmedMeetingView meeting={selectedMeeting} onClose={handleCloseMeetingView} />
+        
     )
 };
 

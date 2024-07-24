@@ -1,14 +1,16 @@
 import React from 'react';
 import { FlatList, StyleSheet } from 'react-native';
-import { Day } from '../types';
+import { Day, TimeBlock } from '../types';
 import DayColumn from './DayColumn';
 
 interface TimeBlockSelectorProps {
   days: Day[];
   onBlockToggle?: (dayIndex: number, blockIndex: number) => void;
+  isCreator: boolean;
+  creatorDays: Day[];
 }
 
-const TimeBlockSelector: React.FC<TimeBlockSelectorProps> = ({ days, onBlockToggle }) => {
+const TimeBlockSelector: React.FC<TimeBlockSelectorProps> = ({ days, onBlockToggle, isCreator, creatorDays }) => {
   return (
     <FlatList
       data={days}
@@ -18,6 +20,8 @@ const TimeBlockSelector: React.FC<TimeBlockSelectorProps> = ({ days, onBlockTogg
           date={item.date}
           blocks={item.blocks}
           onBlockToggle={(blockIndex) => onBlockToggle && onBlockToggle(index, blockIndex)}
+          isCreator={isCreator}
+          creatorBlocks={creatorDays[index].blocks}
         />
       )}
       horizontal

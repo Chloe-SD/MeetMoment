@@ -1,4 +1,4 @@
-// sec/screens/NewMeetingScreen.tsx
+// src/screens/NewMeetingScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { Button, StyleSheet, FlatList, Pressable, Text } from 'react-native';
 import { Meeting, Participant, Day, TimeBlock } from '../types';
@@ -8,7 +8,7 @@ import ParticipantList from '../components/ParticipantList';
 import DateRangePicker from '../components/DateRangePicker';
 import MeetingSchedule from '../components/MeetingSchedule';
 import { useUser } from '../context/UserContext';
-import { DataManager } from '../utils/DataManager';
+import { SaveMeetingToDatabase } from '../utils/DataManager';
 
 
 const NewMeetingScreen = () => {
@@ -42,7 +42,10 @@ const NewMeetingScreen = () => {
       participants,
       days: generateDays(startDate, endDate),
       title,
-      status: 'pending'
+      status: 'pending',
+      participantAvailability: {
+        [currentUserEmail]: generateDays(startDate, endDate),
+      },
     };
     setMeeting(newMeeting);
   };
@@ -56,11 +59,14 @@ const NewMeetingScreen = () => {
       participants: [...participants, {email: currentUserEmail, status: 'confirmed'}],
       days: meeting.days,
       title: title,
-      status: 'pending'
+      status: 'pending',
+      participantAvailability: {
+        [currentUserEmail]: generateDays(startDate, endDate),
+      },
     };
 
   try {
-    await DataManager.saveMeetingToDatabase(meetingToSave);
+    await SaveMeetingToDatabase(meetingToSave);
     console.log('Meeting saved successfully!');
   } catch (error) {
     console.error('Error saving meeting:', error);

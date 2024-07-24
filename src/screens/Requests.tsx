@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, FlatList, Button, Modal, Alert } from 'react-native';
 import { useUser } from '../context/UserContext';
-import { DataManager } from '../utils/DataManager';
+import { FetchMeetings } from '../utils/DataManager';
 import { Meeting } from '../types';
 import HomeScreen from './HomeScreen';
 import MeetingView from './MeetingView';
@@ -21,7 +21,7 @@ const RequestsScreen = () => {
 
   const fetchMeetings = async () => {
     try {
-      const fetchedMeetings = await DataManager.fetchMeetings();
+      const fetchedMeetings = await FetchMeetings();
       const filteredMeetings = fetchedMeetings.filter(meeting => 
         (meeting.participants.some(participant => 
           participant.email === user?.email && participant.status === 'pending'
@@ -159,24 +159,6 @@ const styles = StyleSheet.create({
   meetingCreator: {
     fontSize: 14,
     color: '#555',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalView: {
-    width: '80%',
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-  },
-  modalText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
   },
 });
 

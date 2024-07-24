@@ -4,7 +4,7 @@ import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import auth from '@react-native-firebase/auth';
 import { User } from "../types";
 import { useUser } from "../context/UserContext";
-import { DataManager } from "../utils/DataManager";
+import { CreateUserDocument, FetchUserData } from "../utils/DataManager";
 
 const LoginScreen = () => {
     const { setUser } = useUser();
@@ -16,7 +16,7 @@ const LoginScreen = () => {
         try {
             const userCredential = await auth().signInWithEmailAndPassword(email, password);
             const firebaseUser = userCredential.user;
-            const userData = await DataManager.fetchUserData(firebaseUser.uid);
+            const userData = await FetchUserData(firebaseUser.uid);
             setUser(userData);
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -32,7 +32,7 @@ const LoginScreen = () => {
             const userCredential = await auth().createUserWithEmailAndPassword(email, password);
             const firebaseUser = userCredential.user;
             const newUser: User = { id: firebaseUser.uid, name: name || 'User', email: firebaseUser.email ?? '' };
-            await DataManager.createUserDocument(newUser);
+            await CreateUserDocument(newUser);
             setUser(newUser);
         } catch (error: unknown) {
             if (error instanceof Error) {

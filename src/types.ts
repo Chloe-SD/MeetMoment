@@ -1,11 +1,10 @@
+// src/types.ts
 export interface User {
     id: string;
     name: string;
     email: string;
   }
   
-
-// OBJECT INTERFACES FOR SCHEDULES
 export interface TimeBlock {
     start: string; // start and end will shift depending on if half hour or hour times
     end: string;
@@ -26,6 +25,9 @@ export interface Meeting {
     participants: Participant[];
     days: Day[];
     status: 'pending' | 'confirmed' | 'cancelled';
+    participantAvailability: {
+      [email: string]: Day[];
+    };
 }
   
   export interface Participant {

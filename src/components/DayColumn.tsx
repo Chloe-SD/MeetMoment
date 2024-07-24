@@ -7,9 +7,11 @@ interface DayColumnProps {
   date: string;
   blocks: TimeBlock[];
   onBlockToggle?: (blockIndex: number) => void;
+  isCreator: boolean;
+  creatorBlocks: TimeBlock[];
 }
 
-const DayColumn: React.FC<DayColumnProps> = ({ date, blocks, onBlockToggle }) => {
+const DayColumn: React.FC<DayColumnProps> = ({ date, blocks, onBlockToggle, isCreator, creatorBlocks }) => {
   const dateObj = new Date(date);
   const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
   const formattedDate = dateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
@@ -18,15 +20,23 @@ const DayColumn: React.FC<DayColumnProps> = ({ date, blocks, onBlockToggle }) =>
     <View style={styles.container}>
       <Text style={styles.dayOfWeek}>{dayOfWeek}</Text>
       <Text style={styles.date}>{formattedDate}</Text>
-      {blocks.map((block, index) => (
-        <TouchableOpacity
-          key={index}
-          style={[styles.block, block.available && styles.blockAvailable]}
-          onPress={() => onBlockToggle && onBlockToggle(index)}
-        >
-          <Text style={styles.blockText}>{block.start}</Text>
-        </TouchableOpacity>
-      ))}
+      {blocks.map((block, index) => {
+        const isSelectable = isCreator || creatorBlocks[index].available;
+        return (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.block,
+              block.available && styles.blockAvailable,
+              !isSelectable && styles.blockDisabled
+            ]}
+            onPress={() => isSelectable && onBlockToggle && onBlockToggle(index)}
+            disabled={!isSelectable}
+          >
+            <Text style={styles.blockText}>{block.start}</Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
@@ -58,6 +68,9 @@ const styles = StyleSheet.create({
   },
   blockText: {
     fontSize: 16,
+  },
+  blockDisabled: {
+    opacity: 0.5,
   },
 });
 
