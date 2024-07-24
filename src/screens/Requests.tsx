@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, FlatList, Button, 
 import { useUser } from '../context/UserContext';
 import { DataManager } from '../utils/DataManager';
 import { Meeting } from '../types';
+import HomeScreen from './HomeScreen';
+import MeetingView from './MeetingView';
 
 const RequestsScreen = () => {
   const { user } = useUser();
@@ -11,6 +13,7 @@ const RequestsScreen = () => {
   const [code, setCode] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
 
   useEffect(() => {
     fetchMeetings();
@@ -32,7 +35,8 @@ const RequestsScreen = () => {
 
   const handleMeetingClick = (meeting: Meeting) => {
     // Handle meeting click, possibly open a detailed view
-    setModalVisible(true);
+    setSelectedMeeting(meeting);
+    
   };
 
   const renderMeetingItem = ({ item }: { item: Meeting }) => (
@@ -44,50 +48,48 @@ const RequestsScreen = () => {
     </TouchableOpacity>
   );
 
+  const handleCloseMeetingView = () => {
+    setSelectedMeeting(null);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Meet Moment</Text>
-      <View style={styles.profileContainer}>
-        <View style={styles.profileText}>
-          <Text style={styles.greeting}>Hi, {user?.name}</Text>
-        </View>
-      </View>
-      <Text style={styles.title}>{user?.name}'s Requests</Text>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search"
-          value={search}
-          onChangeText={setSearch}
-        />
-      </View>
-      <TextInput
-        style={styles.codeInput}
-        placeholder="Enter Code"
-        value={code}
-        onChangeText={setCode}
-        keyboardType="numeric"
-      />
-      <FlatList
-        data={meetings}
-        renderItem={renderMeetingItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-      />
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World</Text>
-            <Button title="Close" onPress={() => setModalVisible(false)} />
+    !selectedMeeting? (
+      <View style={styles.container}>
+        <Text style={styles.header}>Meet Moment</Text>
+        <View style={styles.profileContainer}>
+          <View style={styles.profileText}>
+            <Text style={styles.greeting}>Hi, {user?.name}</Text>
           </View>
         </View>
-      </Modal>
-    </View>
+        <Text style={styles.title}>{user?.name}'s Requests</Text>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search"
+            value={search}
+            onChangeText={setSearch}
+          />
+        </View>
+        <TextInput
+          style={styles.codeInput}
+          placeholder="Enter Code"
+          value={code}
+          onChangeText={setCode}
+          keyboardType="numeric"
+        />
+        <FlatList
+          data={meetings}
+          renderItem={renderMeetingItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContainer}
+        />
+        
+      </View>
+      ) : (
+        <MeetingView meeting={selectedMeeting} onClose={handleCloseMeetingView} />
+      )
+    
+  
   );
 };
 
