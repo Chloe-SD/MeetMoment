@@ -22,7 +22,7 @@ const RequestsScreen = () => {
       const filteredMeetings = fetchedMeetings.filter(meeting => 
         (meeting.participants.some(participant => 
           participant.email === user?.email && participant.status === 'pending'
-        )) || (meeting.creatorEmail === user?.email && meeting.status === 'pending')
+        ))
       );
       setMeetings(filteredMeetings);
     } catch (error) {

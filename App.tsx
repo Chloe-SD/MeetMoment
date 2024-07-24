@@ -58,7 +58,11 @@ const AppNavigator = () => {
         component={HomeScreen}
         options={{
           header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
+          unmountOnBlur: true
         }} 
+        listeners={({ navigation }) => ({
+          blur: () => navigation.setParams({ screen: undefined }),
+        })}
       />
       <Tab.Screen 
         name="New Meeting" 
@@ -72,7 +76,11 @@ const AppNavigator = () => {
         component={RequestsScreen}
         options={{
           header: () => <CustomHeader username={user?.name ?? 'Guest'} />,
+          unmountOnBlur: true
         }} 
+        listeners={({ navigation }) => ({
+          blur: () => navigation.setParams({ screen: undefined }),
+        })} 
       />
       <Tab.Screen 
         name="Profile" 
