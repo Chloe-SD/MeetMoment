@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
-const CustomHeader = ({ username }: { username: string }) => {
+const CustomHeader = ({username}: {username: string}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.appName}>MeetMoment</Text>
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#f9f7ff',
+    backgroundColor: '#FFFFFF',
   },
   appName: {
     color: '#3D90E3',

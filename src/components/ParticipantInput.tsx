@@ -1,8 +1,19 @@
 // ParticipantInput.tsx
-import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Pressable, Text } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  TextInput,
+  Button,
+  StyleSheet,
+  Pressable,
+  Text,
+} from 'react-native';
 
-const ParticipantInput = ({ onAddParticipant }: { onAddParticipant: (email: string) => void }) => {
+const ParticipantInput = ({
+  onAddParticipant,
+}: {
+  onAddParticipant: (email: string) => void;
+}) => {
   const [newEmail, setNewEmail] = useState<string>('');
 
   const handleAddParticipant = () => {
@@ -22,7 +33,7 @@ const ParticipantInput = ({ onAddParticipant }: { onAddParticipant: (email: stri
       />
       <Pressable style={styles.button} onPress={handleAddParticipant}>
         <Text style={styles.text}>ADD</Text>
-        </Pressable>
+      </Pressable>
     </View>
   );
 };
@@ -37,24 +48,24 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: 'gray',
     borderWidth: 1,
+    borderRadius: 5,
     marginRight: 8,
     paddingHorizontal: 8,
   },
-    button: {
-    backgroundColor: '#3D90E3', 
+  button: {
+    backgroundColor: '#3D90E3',
     width: 80,
     height: 50,
     padding: 3,
-    marginTop: 30,
     borderRadius: 5,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   text: {
     color: '#FFFFFF',
     fontSize: 16,
     textAlign: 'center',
-    fontWeight: '600'
-  }
+    fontWeight: '600',
+  },
 });
 
 export default ParticipantInput;

@@ -1,33 +1,37 @@
 // MeetingTitleInput.tsx
 import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import {View, Text, TextInput, StyleSheet} from 'react-native';
 
-const MeetingTitleInput = ({ title, setTitle }: { title: string, setTitle: (title: string) => void }) => (
+const MeetingTitleInput = ({
+  title,
+  setTitle,
+  onFocus,
+}: {
+  title: string;
+  setTitle: (title: string) => void;
+  onFocus: () => void;
+}) => (
   <View>
-    <Text style={styles.title}>New Meeting</Text>
     <TextInput
       style={styles.input}
       placeholder="Meeting Title"
       value={title}
       onChangeText={setTitle}
+      onFocus={onFocus}
     />
   </View>
 );
 
 const styles = StyleSheet.create({
-    title: {
-      color: '#174e87',
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginBottom: 16,
-    },
-    input: {
-      height: 40,
-      borderColor: 'gray',
-      borderWidth: 1,
-      marginBottom: 16,
-      paddingHorizontal: 8,
-    },
-  });
+  input: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 2,
+    paddingHorizontal: 8,
+    fontSize: 15,
+  },
+});
 
-  export default MeetingTitleInput;
+export default MeetingTitleInput;

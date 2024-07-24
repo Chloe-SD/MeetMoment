@@ -1,12 +1,22 @@
 // src/screens/Requests.tsx
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, FlatList, Button, Modal, Alert } from 'react-native';
-import { useUser } from '../context/UserContext';
-import { DataManager } from '../utils/DataManager';
-import { Meeting } from '../types';
+import React, {useState, useEffect} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  FlatList,
+  Button,
+  Modal,
+  Alert,
+} from 'react-native';
+import {useUser} from '../context/UserContext';
+import {DataManager} from '../utils/DataManager';
+import {Meeting} from '../types';
 
 const RequestsScreen = () => {
-  const { user } = useUser();
+  const {user} = useUser();
   const [search, setSearch] = useState('');
   const [code, setCode] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
@@ -19,14 +29,16 @@ const RequestsScreen = () => {
   const fetchMeetings = async () => {
     try {
       const fetchedMeetings = await DataManager.fetchMeetings();
-      const filteredMeetings = fetchedMeetings.filter(meeting => 
-        (meeting.participants.some(participant => 
-          participant.email === user?.email && participant.status === 'pending'
-        )) || (meeting.creatorEmail === user?.email && meeting.status === 'pending')
+      const filteredMeetings = fetchedMeetings.filter(meeting =>
+        meeting.participants.some(
+          participant =>
+            participant.email === user?.email &&
+            participant.status === 'pending',
+        ),
       );
       setMeetings(filteredMeetings);
     } catch (error) {
-      Alert.alert("Error", "Failed to load meetings. Please try again.");
+      Alert.alert('Error', 'Failed to load meetings. Please try again.');
     }
   };
 
@@ -35,18 +47,22 @@ const RequestsScreen = () => {
     setModalVisible(true);
   };
 
-  const renderMeetingItem = ({ item }: { item: Meeting }) => (
-    <TouchableOpacity style={styles.meetingItem} onPress={() => handleMeetingClick(item)} key={item.id}>
+  const renderMeetingItem = ({item}: {item: Meeting}) => (
+    <TouchableOpacity
+      style={styles.meetingItem}
+      onPress={() => handleMeetingClick(item)}
+      key={item.id}>
       <View style={styles.meetingInfo}>
         <Text style={styles.meetingTitle}>{item.title}</Text>
-        <Text style={styles.meetingCreator}>created by {item.creatorEmail}</Text>
+        <Text style={styles.meetingCreator}>
+          created by {item.creatorEmail}
+        </Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Meet Moment</Text>
       <View style={styles.profileContainer}>
         <View style={styles.profileText}>
           <Text style={styles.greeting}>Hi, {user?.name}</Text>
@@ -71,15 +87,14 @@ const RequestsScreen = () => {
       <FlatList
         data={meetings}
         renderItem={renderMeetingItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
         contentContainerStyle={styles.listContainer}
       />
       <Modal
         visible={modalVisible}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setModalVisible(false)}
-      >
+        onRequestClose={() => setModalVisible(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Hello World</Text>
@@ -95,9 +110,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#FFFFFF',
   },
   header: {
-    fontSize: 24,
+    fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 16,
@@ -142,7 +158,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   meetingItem: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#ebf4fc',
     borderRadius: 8,
     padding: 16,
     marginBottom: 16,

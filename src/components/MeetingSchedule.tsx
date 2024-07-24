@@ -1,10 +1,18 @@
 // MeetingSchedule.tsx
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { Meeting } from '../types';
+import {View, Text, Button, StyleSheet} from 'react-native';
+import {Meeting} from '../types';
 import TimeBlockSelector from './TimeBlockSelector';
 
-const MeetingSchedule = ({ meeting, onBlockToggle, onSaveMeeting }: { meeting: Meeting, onBlockToggle: (dayIndex: number, blockIndex: number) => void, onSaveMeeting: () => void }) => (
+const MeetingSchedule = ({
+  meeting,
+  onBlockToggle,
+  onSaveMeeting,
+}: {
+  meeting: Meeting;
+  onBlockToggle: (dayIndex: number, blockIndex: number) => void;
+  onSaveMeeting: () => void;
+}) => (
   <View>
     <Text style={styles.title}>Meeting Created</Text>
     <TimeBlockSelector days={meeting.days} onBlockToggle={onBlockToggle} />
