@@ -1,7 +1,7 @@
 // src/screens/MeetingView.tsx
 import React, { useState, useEffect } from 'react';
 import { Button, Text, SafeAreaView, ScrollView, StyleSheet, Alert } from "react-native";
-import { Meeting, Day } from "../types";
+import { Meeting, Day, TimeBlock } from "../types";
 import TimeBlockSelector from "../components/TimeBlockSelector";
 import { useUser } from '../context/UserContext';
 import { UpdateMeeting } from '../utils/DataManager';
@@ -13,16 +13,33 @@ export default function MeetingView({ meeting, onClose }: { meeting: Meeting; on
 
   useEffect(() => {
     if (user) {
-      // Check if participantAvailability exists and has an entry for the user
-      if (meeting.participantAvailability && meeting.participantAvailability[user.email]) {
-        setLocalDays(meeting.participantAvailability[user.email]);
-      } else {
-        // If not, fall back to the meeting's days
-        setLocalDays(meeting.days);
-      }
+      const isCreator = meeting.creatorEmail === user.email;
+      const userDays = isCreator ? meeting.days : (meeting.participantAvailability?.[user.email] || meeting.days);
+      
+      const initializedDays = userDays.map(day => ({
+        ...day,
+        blocks: day.blocks.map(block => ({
+          ...block,
+          selectable: meeting.days.find(d => d.date === day.date)?.blocks.find(b => b.start === block.start)?.available || false,
+          available: isCreator ? false : block.available // For creator, start with all blocks unselected
+        }))
+      }));
+
+      setLocalDays(initializedDays);
     }
     setIsLoading(false);
   }, [user, meeting]);
+
+  const handleBlockToggle = (dayIndex: number, blockIndex: number) => {
+    setLocalDays(prevDays => {
+      const newDays = [...prevDays];
+      const block = newDays[dayIndex].blocks[blockIndex];
+      if (block.selectable) {
+        block.available = !block.available;
+      }
+      return newDays;
+    });
+  };
 
   const handleSubmit = async () => {
     if (!user) {
@@ -42,6 +59,7 @@ export default function MeetingView({ meeting, onClose }: { meeting: Meeting; on
         ),
       };
       await UpdateMeeting(updatedMeeting);
+      Alert.alert('Success', 'Your availability has been submitted.');
       onClose();
     } catch (error) {
       console.error('Error updating meeting:', error);
@@ -57,28 +75,13 @@ export default function MeetingView({ meeting, onClose }: { meeting: Meeting; on
     );
   }
 
-  if (!user) {
-    return (
-      <SafeAreaView style={styles.safeArea}>
-        <Text>You must be logged in to view this meeting.</Text>
-        <Button title="Back" onPress={onClose} />
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.meetingTitle}>Meeting Title: {meeting.title}</Text>
         <TimeBlockSelector
           days={localDays}
-          onBlockToggle={(dayIndex, blockIndex) => {
-            const newDays = [...localDays];
-            newDays[dayIndex].blocks[blockIndex].available = !newDays[dayIndex].blocks[blockIndex].available;
-            setLocalDays(newDays);
-          }}
-          isCreator={meeting.creatorEmail === user.email}
-          creatorDays={meeting.days}
+          onBlockToggle={handleBlockToggle}
         />
         <Button title="Submit Availability" onPress={handleSubmit} />
         <Button title="Back" onPress={onClose} />

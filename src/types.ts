@@ -9,6 +9,7 @@ export interface TimeBlock {
     start: string; // start and end will shift depending on if half hour or hour times
     end: string;
     available: boolean; // is this time slot selected as available?
+    selectable: boolean; // used to make original creator blocks only selectable blocks
 }
 
 export interface Day {

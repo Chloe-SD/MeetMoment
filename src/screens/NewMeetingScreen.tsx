@@ -87,6 +87,7 @@ const NewMeetingScreen = () => {
         start,
         end,
         available: false,
+        selectable: true, // All blocks are selectable for the creator
       });
     }
   

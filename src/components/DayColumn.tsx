@@ -1,4 +1,5 @@
 
+// src/components/DayColumn.tsx
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { TimeBlock } from '../types';
@@ -6,12 +7,10 @@ import { TimeBlock } from '../types';
 interface DayColumnProps {
   date: string;
   blocks: TimeBlock[];
-  onBlockToggle?: (blockIndex: number) => void;
-  isCreator: boolean;
-  creatorBlocks: TimeBlock[];
+  onBlockToggle: (blockIndex: number) => void;
 }
 
-const DayColumn: React.FC<DayColumnProps> = ({ date, blocks, onBlockToggle, isCreator, creatorBlocks }) => {
+const DayColumn: React.FC<DayColumnProps> = ({ date, blocks, onBlockToggle }) => {
   const dateObj = new Date(date);
   const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
   const formattedDate = dateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
@@ -20,23 +19,20 @@ const DayColumn: React.FC<DayColumnProps> = ({ date, blocks, onBlockToggle, isCr
     <View style={styles.container}>
       <Text style={styles.dayOfWeek}>{dayOfWeek}</Text>
       <Text style={styles.date}>{formattedDate}</Text>
-      {blocks.map((block, index) => {
-        const isSelectable = isCreator || creatorBlocks[index].available;
-        return (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.block,
-              block.available && styles.blockAvailable,
-              !isSelectable && styles.blockDisabled
-            ]}
-            onPress={() => isSelectable && onBlockToggle && onBlockToggle(index)}
-            disabled={!isSelectable}
-          >
-            <Text style={styles.blockText}>{block.start}</Text>
-          </TouchableOpacity>
-        );
-      })}
+      {blocks.map((block, index) => (
+        <TouchableOpacity
+          key={index}
+          style={[
+            styles.block,
+            block.available && styles.blockAvailable,
+            !block.selectable && styles.blockDisabled
+          ]}
+          onPress={() => block.selectable && onBlockToggle(index)}
+          disabled={!block.selectable}
+        >
+          <Text style={styles.blockText}>{block.start}</Text>
+        </TouchableOpacity>
+      ))}
     </View>
   );
 };
@@ -70,6 +66,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   blockDisabled: {
+    backgroundColor: '#e0e0e0', // Darker grey for non-selectable blocks
     opacity: 0.5,
   },
 });
