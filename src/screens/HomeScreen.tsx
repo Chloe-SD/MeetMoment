@@ -4,11 +4,13 @@ import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } 
 import { useUser } from '../context/UserContext';
 import { DataManager } from '../utils/DataManager';
 import { Meeting } from '../types';
+import MeetingView from './MeetingView';
 
 const HomeScreen = () => {
     const { user } = useUser();
     const [searchText, setSearchText] = useState('');
     const [meetings, setMeetings] = useState<Meeting[]>([]);
+    const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
 
     useEffect(() => {
         fetchMeetings();
@@ -50,7 +52,15 @@ const HomeScreen = () => {
         meeting.title.toLowerCase().includes(searchText.toLowerCase())
     );
 
-    return (
+    const handleCloseMeetingView = () => {
+        setSelectedMeeting(null);
+    };
+
+    const handleSelectMeeting = (meeting: Meeting) => () => {
+        setSelectedMeeting(meeting);  
+      };
+
+    return !selectedMeeting? (
         <View style={styles.container}>
             <TextInput style={styles.searchBar}
                 placeholder="Search"  value={searchText}
@@ -59,8 +69,8 @@ const HomeScreen = () => {
             <FlatList
                 data={filteredMeetings}
                 keyExtractor={item => item.id}
-                renderItem={({ item }) => (
-                    <View style={styles.meetingItem}>
+                renderItem={({ item }) => ( 
+                    <TouchableOpacity style={styles.meetingItem} onPress={handleSelectMeeting(item)}>
                         <View style={styles.meetingText}>
                             <Text style={styles.meetingTitle}>{item.title}</Text>
                             <Text style={styles.meetingCreator}>created by {item.creatorEmail}</Text>
@@ -68,11 +78,13 @@ const HomeScreen = () => {
                         <TouchableOpacity onPress={() => handleDelete(item.id)}>
                             <Text style={styles.deleteButton}>✖</Text>
                         </TouchableOpacity>
-                    </View>
+                    </TouchableOpacity>
                 )}
             />
         </View>
-    );
+    ) : (
+        <MeetingView meeting={selectedMeeting} onClose={handleCloseMeetingView} />
+    )
 };
 
 const styles = StyleSheet.create({
