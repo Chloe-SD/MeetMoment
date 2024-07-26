@@ -47,6 +47,7 @@ const DateRangePicker = ({
         <Text style={styles.dateText}>{startDate.toDateString()}</Text>
         {showStartPicker && (
           <DateTimePicker
+            minimumDate={new Date()}
             value={startDate}
             mode="date"
             display="default"
@@ -61,6 +62,7 @@ const DateRangePicker = ({
         <Text style={styles.dateText}>{endDate.toDateString()}</Text>
         {showEndPicker && (
           <DateTimePicker
+            minimumDate={new Date()}
             value={endDate}
             mode="date"
             display="default"

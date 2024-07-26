@@ -1,25 +1,24 @@
 // ParticipantInput.tsx
-import React, {useState} from 'react';
-import {
-  View,
-  TextInput,
-  Button,
-  StyleSheet,
-  Pressable,
-  Text,
-} from 'react-native';
+import React from 'react';
+import {View, TextInput, StyleSheet, Pressable, Text} from 'react-native';
 
 const ParticipantInput = ({
+  disabled,
+  participantEmail,
+  onChange,
   onAddParticipant,
+  onFocus,
 }: {
+  disabled: boolean;
+  participantEmail: string;
+  onChange: (newEmail: string) => void;
   onAddParticipant: (email: string) => void;
+  onFocus: () => void;
 }) => {
-  const [newEmail, setNewEmail] = useState<string>('');
-
   const handleAddParticipant = () => {
-    if (newEmail && newEmail.includes('@')) {
-      onAddParticipant(newEmail.trim());
-      setNewEmail('');
+    if (participantEmail && participantEmail.includes('@')) {
+      onAddParticipant(participantEmail.trim());
+      onChange('');
     }
   };
 
@@ -28,10 +27,14 @@ const ParticipantInput = ({
       <TextInput
         style={styles.input}
         placeholder="Add Participant Email"
-        value={newEmail}
-        onChangeText={setNewEmail}
+        value={participantEmail}
+        onChangeText={onChange}
+        onFocus={onFocus}
       />
-      <Pressable style={styles.button} onPress={handleAddParticipant}>
+      <Pressable
+        disabled={disabled}
+        style={disabled ? styles.disabledButton : styles.button}
+        onPress={handleAddParticipant}>
         <Text style={styles.text}>ADD</Text>
       </Pressable>
     </View>
@@ -54,6 +57,14 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#3D90E3',
+    width: 80,
+    height: 50,
+    padding: 3,
+    borderRadius: 5,
+    justifyContent: 'center',
+  },
+  disabledButton: {
+    backgroundColor: 'grey',
     width: 80,
     height: 50,
     padding: 3,

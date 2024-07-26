@@ -13,8 +13,10 @@ export default function ParticipantValidation({
     return <Text style={styles.validation}>The participant is required.</Text>;
   } else if (isEmail) {
     return <Text style={styles.validation}>Must be an email</Text>;
-  } else if (hasParticipants) {
-    return <Text>Must have at least one participant</Text>;
+  } else if (!hasParticipants) {
+    return (
+      <Text style={styles.validation}>Must add at least one participant</Text>
+    );
   } else {
     return <Text></Text>;
   }

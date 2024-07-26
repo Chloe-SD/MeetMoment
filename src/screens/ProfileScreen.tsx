@@ -61,11 +61,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   container: {
+    flexGrow: 1,
+    padding: 20,
     backgroundColor: '#FFFFFF',
-    marginTop: 32,
-    paddingHorizontal: 24,
-    flex: 1,
-    //justifyContent: 'center',
+    paddingTop: 5,
   },
   info: {
     fontSize: 18,

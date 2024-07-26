@@ -1,12 +1,12 @@
 // sec/screens/NewMeetingScreen.tsx
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
-  Button,
   StyleSheet,
   FlatList,
   Pressable,
   Text,
   View,
+  ToastAndroid,
 } from 'react-native';
 import {Meeting, Participant, Day, TimeBlock} from '../types';
 import MeetingTitleInput from '../components/MeetingTitleInput';
@@ -23,7 +23,10 @@ const NewMeetingScreen = () => {
   const {user} = useUser();
   const [title, setTitle] = useState<string>('');
   const [titleInputTouched, setTitleInputTouched] = useState<boolean>(false);
-  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [participant, setParticipant] = useState<string>('');
+  const [participantList, setParticipantList] = useState<Participant[]>([]);
+  const [participantInputTouched, setParticipantInputTouched] =
+    useState<boolean>(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [meeting, setMeeting] = useState<Meeting | null>(null);
@@ -32,14 +35,15 @@ const NewMeetingScreen = () => {
     if (email == user?.email) {
       return;
     }
-    setParticipants([...participants, {email: email, status: 'pending'}]);
+    setParticipantList([...participantList, {email: email, status: 'pending'}]);
+    setParticipantInputTouched(false);
   };
 
   const removeParticipant = (email: string) => {
-    setParticipants(participants.filter(p => p.email !== email));
+    setParticipantList(participantList.filter(p => p.email !== email));
   };
 
-  const createMeeting = () => {
+  const selectTime = () => {
     if (!user) {
       return;
     }
@@ -47,11 +51,12 @@ const NewMeetingScreen = () => {
     const newMeeting: Meeting = {
       id: Date.now().toString(),
       creatorEmail: currentUserEmail,
-      participants,
+      participants: participantList,
       days: generateDays(startDate, endDate),
       title,
       status: 'pending',
     };
+
     setMeeting(newMeeting);
   };
 
@@ -62,7 +67,7 @@ const NewMeetingScreen = () => {
       id: meeting.id,
       creatorEmail: currentUserEmail,
       participants: [
-        ...participants,
+        ...participantList,
         {email: currentUserEmail, status: 'confirmed'},
       ],
       days: meeting.days,
@@ -71,8 +76,13 @@ const NewMeetingScreen = () => {
     };
     try {
       await DataManager.saveMeetingToDatabase(meetingToSave);
+      ToastAndroid.show('Meeting saved successfully!', ToastAndroid.LONG);
+      setTitle('');
+      setParticipantList([]);
+      setMeeting(null);
       console.log('Meeting saved successfully!');
     } catch (error) {
+      ToastAndroid.show('Error saving meeting!', ToastAndroid.LONG);
       console.error('Error saving meeting:', error);
     }
   };
@@ -148,7 +158,7 @@ const NewMeetingScreen = () => {
     {type: 'participantValidation', id: 'participantValidation'},
     {type: 'participantList', id: 'participantList'},
     {type: 'dateRangePicker', id: 'dateRangePicker'},
-    {type: 'createButton', id: 'createButton'},
+    {type: 'selectTimeButton', id: 'selectTimeButton'},
     {type: 'meeting', id: 'meeting'},
   ];
 
@@ -171,22 +181,38 @@ const NewMeetingScreen = () => {
           />
         );
       case 'participantInput':
-        return <ParticipantInput onAddParticipant={addParticipant} />;
-      case 'participantList':
         return (
-          <ParticipantList
-            participants={participants}
-            onRemoveParticipant={removeParticipant}
+          <ParticipantInput
+            disabled={
+              !validateNotEmpty(participant) ||
+              !validateEmailFormat(participant)
+            }
+            onAddParticipant={addParticipant}
+            participantEmail={participant}
+            onChange={setParticipant}
+            onFocus={() => setParticipantInputTouched(true)}
           />
         );
       case 'participantValidation':
         return (
           <ParticipantValidation
-            isEmpty={validateNotEmpty()}
-            isEmail={false}
-            hasParticipants={false}
+            isEmpty={!validateNotEmpty(participant) && participantInputTouched}
+            isEmail={
+              !validateEmailFormat(participant) && participantInputTouched
+            }
+            hasParticipants={
+              validateParticipantListNotEmpty() || !participantInputTouched
+            }
           />
         );
+      case 'participantList':
+        return (
+          <ParticipantList
+            participants={participantList}
+            onRemoveParticipant={removeParticipant}
+          />
+        );
+
       case 'dateRangePicker':
         return (
           <DateRangePicker
@@ -196,15 +222,21 @@ const NewMeetingScreen = () => {
             setEndDate={setEndDate}
           />
         );
-      case 'createButton':
+      case 'selectTimeButton':
         return (
-          <Pressable style={styles.button} onPress={createMeeting}>
-            <Text style={styles.text}>Create Meeting</Text>
+          <Pressable
+            style={
+              !validateSelectedTime() ? styles.disabledButton : styles.button
+            }
+            disabled={!validateSelectedTime()}
+            onPress={selectTime}>
+            <Text style={styles.text}>Select Time</Text>
           </Pressable>
         );
       case 'meeting':
         return meeting ? (
           <MeetingSchedule
+            shouldDisableSaveButton={shouldDisableSaveButton()}
             meeting={meeting}
             onBlockToggle={handleBlockToggle}
             onSaveMeeting={saveMeetingToDB}
@@ -219,13 +251,33 @@ const NewMeetingScreen = () => {
     return string !== '';
   }
 
+  function validateEmailFormat(string: string): boolean {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/g;
+    const matchesArray = string.match(regex);
+    // if there are no matches then false
+    // if there is a match then true
+    const emailIsGood = !!matchesArray; // !! to convert array to boolean
+    return emailIsGood;
+  }
+
+  function validateSelectedTime(): boolean {
+    return startDate <= endDate;
+  }
+
+  function validateParticipantListNotEmpty(): boolean {
+    return participantList.length > 0;
+  }
+
+  function shouldDisableSaveButton(): boolean {
+    return !validateNotEmpty(title) || !validateParticipantListNotEmpty();
+  }
+
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
         data={listData}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        contentContainerStyle={styles.container}
       />
     </View>
   );
@@ -239,10 +291,20 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   container: {
-    backgroundColor: '#FFFFFF',
     flexGrow: 1,
     padding: 20,
-    paddingTop: 10,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 5,
+  },
+  disabledButton: {
+    backgroundColor: 'grey',
+    width: 150,
+    height: 50,
+    padding: 3,
+    marginTop: 30,
+    borderRadius: 5,
+    justifyContent: 'center',
+    margin: 'auto',
   },
   button: {
     backgroundColor: '#3D90E3',
