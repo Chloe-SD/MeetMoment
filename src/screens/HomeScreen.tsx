@@ -28,16 +28,26 @@ const HomeScreen = () => {
           }
     };
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (meeting: Meeting) => {
+        if (!user?.email) {
+            Alert.alert("Error", "User email is not defined.");
+            return;
+        }
+
         Alert.alert(
             "Delete Meeting",
             "Are you sure you want to delete this meeting?",
             [
-                {text: "Cancel", style: "cancel"},
+                { text: "Cancel", style: "cancel" },
                 { text: "OK", onPress: async () => {
                     try {
-                        await DataManager.deleteMeeting(id);
-                        setMeetings(prevMeetings => prevMeetings.filter(meeting => meeting.id !== id));
+                        if (meeting.creatorEmail === user.email) {
+                            await DataManager.deleteMeeting(meeting.id);
+                            setMeetings(prevMeetings => prevMeetings.filter(m => m.id !== meeting.id));
+                        } else {
+                            await DataManager.removeParticipant(meeting.id, user.email);
+                            setMeetings(prevMeetings => prevMeetings.filter(m => m.id !== meeting.id));
+                        }
                     } catch (error) {
                         Alert.alert("Error", "Failed to delete meeting. Please try again.");
                     }
@@ -65,7 +75,7 @@ const HomeScreen = () => {
                             <Text style={styles.meetingTitle}>{item.title}</Text>
                             <Text style={styles.meetingCreator}>created by {item.creatorEmail}</Text>
                         </View>
-                        <TouchableOpacity onPress={() => handleDelete(item.id)}>
+                        <TouchableOpacity onPress={() => handleDelete(item)}>
                             <Text style={styles.deleteButton}>✖</Text>
                         </TouchableOpacity>
                     </View>

@@ -1,7 +1,6 @@
 // src/utils/DataManager.ts
 import { firestore } from '../firebase';
 import { Meeting, User } from '../types';
-import { useUser } from '../context/UserContext';
 
 export class DataManager {
   static async fetchMeetings(): Promise<Meeting[]> {
@@ -26,6 +25,21 @@ export class DataManager {
       await firestore.collection('meetings').doc(id).delete();
     } catch (error) {
       console.error("Error deleting meeting:", error);
+      throw error;
+    }
+  }
+
+  static async removeParticipant(meetingId: string, email: string): Promise<void> {
+    try {
+      const meetingRef = firestore.collection('meetings').doc(meetingId);
+      const meetingDoc = await meetingRef.get();
+      if (meetingDoc.exists) {
+        const participants = meetingDoc.data()?.participants || [];
+        const updatedParticipants = participants.filter((participant: { email: string }) => participant.email !== email);
+        await meetingRef.update({ participants: updatedParticipants });
+      }
+    } catch (error) {
+      console.error("Error removing participant from meeting:", error);
       throw error;
     }
   }
