@@ -26,12 +26,13 @@ export interface Meeting {
     participants: Participant[];
     days: Day[];
     status: 'pending' | 'confirmed' | 'cancelled';
-    participantAvailability: {
-      [email: string]: Day[];
-    };
+    // participantAvailability: {
+    //   [email: string]: Day[];
+    // };
 }
   
   export interface Participant {
     email: string;
     status: 'pending' | 'submitted' | 'confirmed';
+    participantAvailability: Day[];
   }

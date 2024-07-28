@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useUser } from '../context/UserContext';
-import { FetchMeetings, DeleteMeeting } from '../utils/DataManager';
+import { FetchMeetings, DeleteMeeting, RemoveParticipant } from '../utils/DataManager';
 import { Meeting } from '../types';
-import MeetingView from './MeetingView';
 import ConfirmedMeetingView from './ConfirmedMeetingView';
 
 const HomeScreen = () => {
@@ -31,7 +30,11 @@ const HomeScreen = () => {
           }
     };
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (meeting: Meeting) => {
+        if (!user?.email) {
+            Alert.alert("Error", "User email is not defined.");
+            return;
+        }
         Alert.alert(
             "Delete Meeting",
             "Are you sure you want to delete this meeting?",
@@ -39,8 +42,13 @@ const HomeScreen = () => {
                 {text: "Cancel", style: "cancel"},
                 { text: "OK", onPress: async () => {
                     try {
-                        await DeleteMeeting(id);
-                        setMeetings(prevMeetings => prevMeetings.filter(meeting => meeting.id !== id));
+                        if (meeting.creatorEmail === user.email) {
+                            await DeleteMeeting(meeting.id);
+                            setMeetings(prevMeetings => prevMeetings.filter(m => m.id !== meeting.id));
+                        } else {
+                            await RemoveParticipant(meeting.id, user.email);
+                            setMeetings(prevMeetings => prevMeetings.filter(m => m.id !== meeting.id));
+                        }
                     } catch (error) {
                         Alert.alert("Error", "Failed to delete meeting. Please try again.");
                     }
@@ -76,7 +84,7 @@ const HomeScreen = () => {
                             <Text style={styles.meetingTitle}>{item.title}</Text>
                             <Text style={styles.meetingCreator}>created by {item.creatorEmail}</Text>
                         </View>
-                        <TouchableOpacity onPress={() => handleDelete(item.id)}>
+                        <TouchableOpacity onPress={() => handleDelete(item)}>
                             <Text style={styles.deleteButton}>✖</Text>
                         </TouchableOpacity>
                     </TouchableOpacity>

@@ -1,7 +1,7 @@
 // src/screens/MeetingView.tsx
 import React, { useState, useEffect } from 'react';
 import { Button, Text, SafeAreaView, ScrollView, StyleSheet, Alert } from "react-native";
-import { Meeting, Day, TimeBlock } from "../types";
+import { Meeting, Day, Participant } from "../types";
 import TimeBlockSelector from "../components/TimeBlockSelector";
 import { useUser } from '../context/UserContext';
 import { UpdateMeeting } from '../utils/DataManager';
@@ -14,14 +14,15 @@ export default function MeetingView({ meeting, onClose }: { meeting: Meeting; on
   useEffect(() => {
     if (user) {
       const isCreator = meeting.creatorEmail === user.email;
-      const userDays = isCreator ? meeting.days : (meeting.participantAvailability?.[user.email] || meeting.days);
-      
+      //const userParticipant = meeting.participants.find(p => p.email === user.email);
+      const userDays =  meeting.days;
+
       const initializedDays = userDays.map(day => ({
         ...day,
         blocks: day.blocks.map(block => ({
           ...block,
           selectable: meeting.days.find(d => d.date === day.date)?.blocks.find(b => b.start === block.start)?.available || false,
-          available: isCreator ? false : block.available // For creator, start with all blocks unselected
+          available: false // start with all blocks unselected
         }))
       }));
 
@@ -48,15 +49,15 @@ export default function MeetingView({ meeting, onClose }: { meeting: Meeting; on
     }
 
     try {
+      const updatedParticipants: Participant[] = meeting.participants.map(p =>
+        p.email === user.email
+          ? { ...p, status: 'confirmed' as 'confirmed', participantAvailability: localDays }
+          : p
+      );
+
       const updatedMeeting: Meeting = {
         ...meeting,
-        participantAvailability: {
-          ...meeting.participantAvailability,
-          [user.email]: localDays,
-        },
-        participants: meeting.participants.map(p =>
-          p.email === user.email ? { ...p, status: 'confirmed' } : p
-        ),
+        participants: updatedParticipants,
       };
       await UpdateMeeting(updatedMeeting);
       Alert.alert('Success', 'Your availability has been submitted.');

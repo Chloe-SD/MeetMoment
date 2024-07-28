@@ -10,7 +10,6 @@ import MeetingSchedule from '../components/MeetingSchedule';
 import { useUser } from '../context/UserContext';
 import { SaveMeetingToDatabase } from '../utils/DataManager';
 
-
 const NewMeetingScreen = () => {
   const { user } = useUser();
   const [title, setTitle] = useState<string>('');
@@ -20,69 +19,56 @@ const NewMeetingScreen = () => {
   const [meeting, setMeeting] = useState<Meeting | null>(null);
 
   const addParticipant = (email: string) => {
-    if (email == user?.email) {
+    if (email === user?.email) {
       return;
     }
-    setParticipants([...participants, { email, status: 'pending' }]);
+    setParticipants([...participants, { email, status: 'pending', participantAvailability: [] }]);
   };
 
   const removeParticipant = (email: string) => {
     setParticipants(participants.filter(p => p.email !== email));
   };
 
-
   const createMeeting = () => {
-    if (!user){
+    if (!user) {
       return;
     }
-    const currentUserEmail = user.email; 
+    const currentUserEmail = user.email;
     const newMeeting: Meeting = {
       id: Date.now().toString(),
       creatorEmail: currentUserEmail,
-      participants,
+      participants: [
+        ...participants,
+        { email: currentUserEmail, status: 'confirmed', participantAvailability: generateDays(startDate, endDate) }
+      ],
       days: generateDays(startDate, endDate),
       title,
-      status: 'pending',
-      participantAvailability: {
-        [currentUserEmail]: generateDays(startDate, endDate),
-      },
+      status: 'pending'
     };
     setMeeting(newMeeting);
   };
 
   const saveMeetingToDB = async () => {
     if (!meeting || !user) return;
-    const currentUserEmail = user.email;
-    const meetingToSave: Meeting = {
-      id: meeting.id,
-      creatorEmail: currentUserEmail,
-      participants: [...participants, {email: currentUserEmail, status: 'confirmed'}],
-      days: meeting.days,
-      title: title,
-      status: 'pending',
-      participantAvailability: {
-        [currentUserEmail]: generateDays(startDate, endDate),
-      },
-    };
 
-  try {
-    await SaveMeetingToDatabase(meetingToSave);
-    console.log('Meeting saved successfully!');
-  } catch (error) {
-    console.error('Error saving meeting:', error);
-  }
-};
+    try {
+      await SaveMeetingToDatabase(meeting);
+      console.log('Meeting saved successfully!');
+    } catch (error) {
+      console.error('Error saving meeting:', error);
+    }
+  };
 
   const generateTimeBlocks = (date: string): TimeBlock[] => {
     let blocks: TimeBlock[] = [];
     let current = new Date(`${date}T07:00:00`);  // Start at 7 AM
     const endTime = new Date(`${date}T20:00:00`);  // End at 8 PM
-  
+
     while (current < endTime) {
       const start = current.toTimeString().slice(0, 5);
       current.setHours(current.getHours() + 1);
       const end = current.toTimeString().slice(0, 5);
-  
+
       blocks.push({
         start,
         end,
@@ -90,38 +76,26 @@ const NewMeetingScreen = () => {
         selectable: true, // All blocks are selectable for the creator
       });
     }
-  
+
     return blocks;
   };
-  
+
   const generateDays = (start: Date, end: Date): Day[] => {
-  console.log('Start date received:', start.toISOString());
-  console.log('End date received:', end.toISOString());
+    let days: Day[] = [];
+    let current = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+    let endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate());
 
-  let days: Day[] = [];
-  
-  // Create new Date objects set to midnight in local time
-  let current = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-  let endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate());
-  
-  console.log('Adjusted start date:', current.toISOString());
-  console.log('Adjusted end date:', endDate.toISOString());
+    while (current <= endDate) {
+      const dateStr = current.toISOString().split('T')[0];
+      days.push({
+        date: dateStr,
+        blocks: generateTimeBlocks(dateStr),
+      });
+      current.setDate(current.getDate() + 1);
+    }
 
-  while (current <= endDate) {
-    const dateStr = current.toISOString().split('T')[0];
-    console.log('Adding date:', dateStr);
-    days.push({
-      date: dateStr,
-      blocks: generateTimeBlocks(dateStr),
-    });
-    current.setDate(current.getDate() + 1);
-  }
-
-  console.log('Generated days:', days.map(day => day.date));
-  
-  return days;
-};
-  
+    return days;
+  };
 
   const handleBlockToggle = (dayIndex: number, blockIndex: number) => {
     if (!meeting) return;
@@ -151,9 +125,11 @@ const NewMeetingScreen = () => {
       case 'dateRangePicker':
         return <DateRangePicker startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />;
       case 'createButton':
-        return <Pressable style={styles.button} onPress={createMeeting}>
-          <Text style={styles.text}>Create Meeting</Text>
-          </Pressable>;
+        return (
+          <Pressable style={styles.button} onPress={createMeeting}>
+            <Text style={styles.text}>Create Meeting</Text>
+          </Pressable>
+        );
       case 'meeting':
         return meeting ? (
           <MeetingSchedule meeting={meeting} onBlockToggle={handleBlockToggle} onSaveMeeting={saveMeetingToDB} />
@@ -181,20 +157,20 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   button: {
-    backgroundColor: '#3D90E3', 
+    backgroundColor: '#3D90E3',
     width: 150,
     height: 50,
     padding: 3,
     marginTop: 30,
     borderRadius: 5,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   text: {
     color: '#FFFFFF',
     fontSize: 16,
     textAlign: 'center',
-    fontWeight: '600'
-  }
+    fontWeight: '600',
+  },
 });
 
 export default NewMeetingScreen;

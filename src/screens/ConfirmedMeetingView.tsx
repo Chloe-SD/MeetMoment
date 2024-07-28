@@ -1,7 +1,7 @@
 // src/components/ConfirmedMeetingView.tsx
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
-import { Meeting, Day, TimeBlock } from '../types';
+import { Meeting, Day } from '../types';
 
 interface ConfirmedMeetingViewProps {
   meeting: Meeting;
@@ -44,9 +44,7 @@ export default function ConfirmedMeetingView({ meeting, onClose }: ConfirmedMeet
 }
 
 function getCommonAvailability(meeting: Meeting): Day[] {
-  if (!meeting.participantAvailability) return [];
-
-  const participantAvailabilities = Object.values(meeting.participantAvailability);
+  const participantAvailabilities = meeting.participants.map(p => p.participantAvailability);
   if (participantAvailabilities.length === 0) return [];
 
   return participantAvailabilities[0].map((day, dayIndex) => ({
