@@ -44,7 +44,10 @@ export default function ConfirmedMeetingView({ meeting, onClose }: ConfirmedMeet
 }
 
 function getCommonAvailability(meeting: Meeting): Day[] {
-  const participantAvailabilities = meeting.participants.map(p => p.participantAvailability);
+  const participantAvailabilities = meeting.participants
+    .map(p => p.participantAvailability)
+    .filter(pa => pa !== undefined); // Filter out undefined availabilities
+
   if (participantAvailabilities.length === 0) return [];
 
   return participantAvailabilities[0].map((day, dayIndex) => ({
