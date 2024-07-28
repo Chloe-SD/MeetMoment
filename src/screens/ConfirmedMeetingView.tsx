@@ -1,7 +1,8 @@
 // src/components/ConfirmedMeetingView.tsx
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
-import { Meeting, Day } from '../types';
+import React, { useMemo, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity, Modal, ScrollView, SafeAreaView } from 'react-native';
+import { Meeting, Day, Participant } from '../types';
+import TimeBlockSelector from '../components/TimeBlockSelector';
 
 interface ConfirmedMeetingViewProps {
   meeting: Meeting;
@@ -9,44 +10,103 @@ interface ConfirmedMeetingViewProps {
 }
 
 export default function ConfirmedMeetingView({ meeting, onClose }: ConfirmedMeetingViewProps) {
+  const [selectedParticipant, setSelectedParticipant] = useState<Participant | null>(null);
   const allResponded = meeting.participants?.every(p => p.status === 'confirmed') ?? false;
-  const commonAvailability = getCommonAvailability(meeting);
+  
+  const commonAvailability = useMemo(() => getCommonAvailability(meeting), [meeting]);
+
+  const handleParticipantPress = (participant: Participant) => {
+    setSelectedParticipant(participant);
+  };
+
+  const closeParticipantModal = () => {
+    setSelectedParticipant(null);
+  };
+
+  const renderItem = ({ item }: { item: string }) => {
+    switch (item) {
+      case 'header':
+        return (
+          <>
+            <Text style={styles.title}>{meeting.title || 'Untitled Meeting'}</Text>
+            <Text style={styles.status}>
+              {allResponded ? 'All participants have responded' : 'Waiting for some participants to respond'}
+            </Text>
+          </>
+        );
+      case 'commonAvailability':
+        return (
+          <>
+            <Text style={styles.subtitle}>Common Availability:</Text>
+            <View style={styles.timeBlockContainer}>
+              <TimeBlockSelector days={commonAvailability} onBlockToggle={() => {}} />
+            </View>
+          </>
+        );
+      case 'participants':
+        return (
+          <>
+            <Text style={styles.subtitle}>Participants:</Text>
+            {meeting.participants?.map((participant) => (
+              <TouchableOpacity 
+                key={participant.email} 
+                onPress={() => handleParticipantPress(participant)} 
+                style={styles.participantItem}
+              >
+                <Text style={styles.participantText}>{participant.email}: {participant.status}</Text>
+              </TouchableOpacity>
+            ))}
+          </>
+        );
+      case 'footer':
+        return (
+          <View style={styles.buttonContainer}>
+            <Button title="Close" onPress={onClose} />
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{meeting.title || 'Untitled Meeting'}</Text>
-      <Text style={styles.status}>
-        {allResponded ? 'All participants have responded' : 'Waiting for some participants to respond'}
-      </Text>
-      <Text style={styles.subtitle}>Participants:</Text>
+    <SafeAreaView style={styles.safeArea}>
       <FlatList
-        data={meeting.participants || []}
-        keyExtractor={(item) => item.email}
-        renderItem={({ item }) => (
-          <Text>{item.email}: {item.status}</Text>
-        )}
+        data={['header', 'commonAvailability', 'participants', 'footer']}
+        renderItem={renderItem}
+        keyExtractor={(item) => item}
+        contentContainerStyle={styles.container}
       />
-      <Text style={styles.subtitle}>Common Availability:</Text>
-      {commonAvailability.length > 0 ? (
-        <FlatList
-          data={commonAvailability}
-          keyExtractor={(item) => item.date}
-          renderItem={({ item }) => (
-            <Text>{item.date}: {item.blocks.filter(b => b.available).map(b => b.start).join(', ')}</Text>
-          )}
-        />
-      ) : (
-        <Text>No common availability found</Text>
-      )}
-      <Button title="Close" onPress={onClose} />
-    </View>
+
+      <Modal
+        visible={selectedParticipant !== null}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={closeParticipantModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{selectedParticipant?.email}'s Availability</Text>
+            <TimeBlockSelector 
+              days={selectedParticipant?.participantAvailability || []} 
+              onBlockToggle={() => {}} 
+            />
+            <Button title="Close" onPress={closeParticipantModal} />
+          </View>
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 }
 
 function getCommonAvailability(meeting: Meeting): Day[] {
-  const participantAvailabilities = meeting.participants
+  const confirmedParticipants = meeting.participants.filter(p => p.status === 'confirmed');
+  
+  if (confirmedParticipants.length === 0) return [];
+
+  const participantAvailabilities = confirmedParticipants
     .map(p => p.participantAvailability)
-    .filter(pa => pa !== undefined); // Filter out undefined availabilities
+    .filter(pa => pa !== undefined && pa.length > 0);
 
   if (participantAvailabilities.length === 0) return [];
 
@@ -57,13 +117,64 @@ function getCommonAvailability(meeting: Meeting): Day[] {
       available: participantAvailabilities.every(
         pa => pa[dayIndex]?.blocks[blockIndex]?.available
       ),
+      selectable: false, // Make sure blocks are not selectable in this view
     })),
   }));
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16 },
-  title: { fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
-  status: { fontSize: 16, marginBottom: 16 },
-  subtitle: { fontSize: 18, fontWeight: 'bold', marginTop: 16, marginBottom: 8 },
+  safeArea: {
+    flex: 1,
+  },
+  container: {
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  status: {
+    fontSize: 16,
+    marginBottom: 16,
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 24,
+    marginBottom: 8,
+  },
+  timeBlockContainer: {
+    height: 670, // Adjust this value as needed
+  },
+  participantItem: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  participantText: {
+    fontSize: 16,
+  },
+  buttonContainer: {
+    marginTop: 24,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    borderRadius: 4,
+    alignItems: 'center',
+    width: '90%',
+    maxHeight: '80%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
 });
