@@ -152,65 +152,6 @@ const LoginScreen = () => {
       </View>
     );
   }
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Meet Moment</Text>
-      <Pressable style={styles.button}>
-        <Text style={styles.text}>SIGN UP</Text>
-      </Pressable>
-      <Pressable style={styles.button}>
-        <Text style={styles.text}>LOG IN</Text>
-      </Pressable>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Name (for registration)"
-        value={name}
-        onChangeText={setName}
-      />
-
-      {/* <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Name (for registration)"
-                value={name}
-                onChangeText={setName}
-            />
-            <Button title="Login" onPress={handleLogin} />
-            <Button title="sign up" onPress={handleRegister} /> */}
-    </View>
-  );
 };
 
 const styles = StyleSheet.create({
