@@ -36,3 +36,9 @@ export interface Meeting {
     status: 'pending' | 'submitted' | 'confirmed';
     participantAvailability: Day[];
   }
+
+
+
+
+
+  

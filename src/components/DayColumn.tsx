@@ -1,19 +1,22 @@
 
 // src/components/DayColumn.tsx
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { TimeBlock } from '../types';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {TimeBlock} from '../types';
 
 interface DayColumnProps {
   date: string;
   blocks: TimeBlock[];
-  onBlockToggle: (blockIndex: number) => void;
+  onBlockToggle?: (blockIndex: number) => void;
 }
 
-const DayColumn: React.FC<DayColumnProps> = ({ date, blocks, onBlockToggle }) => {
+const DayColumn: React.FC<DayColumnProps> = ({date, blocks, onBlockToggle}) => {
   const dateObj = new Date(date);
-  const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
-  const formattedDate = dateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
+  const dayOfWeek = dateObj.toLocaleDateString('en-US', {weekday: 'short'});
+  const formattedDate = dateObj.toLocaleDateString('en-US', {
+    month: '2-digit',
+    day: '2-digit',
+  });
 
   return (
     <View style={styles.container}>
@@ -27,7 +30,7 @@ const DayColumn: React.FC<DayColumnProps> = ({ date, blocks, onBlockToggle }) =>
             block.available && styles.blockAvailable,
             !block.selectable && styles.blockDisabled
           ]}
-          onPress={() => block.selectable && onBlockToggle(index)}
+          onPress={() => block.selectable && onBlockToggle && onBlockToggle(index)}
           disabled={!block.selectable}
         >
           <Text style={styles.blockText}>{block.start}</Text>

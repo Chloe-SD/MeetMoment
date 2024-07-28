@@ -13,7 +13,7 @@ export default function MeetingView({ meeting, onClose }: { meeting: Meeting; on
 
   useEffect(() => {
     if (user) {
-      const isCreator = meeting.creatorEmail === user.email;
+     //const isCreator = meeting.creatorEmail === user.email;
       //const userParticipant = meeting.participants.find(p => p.email === user.email);
       const userDays =  meeting.days;
 
