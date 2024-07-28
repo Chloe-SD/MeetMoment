@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { useUser } from "../context/UserContext";
 import { DataManager } from "../utils/DataManager";
+import auth from '@react-native-firebase/auth';
 
 const ProfileScreen = () => {
   const { user, setUser } = useUser();
   const [newName, setNewName] = useState(user?.name || '');
     
   const handleLogout = () => {
+    auth().signOut();
     setUser(null);
   };
 
