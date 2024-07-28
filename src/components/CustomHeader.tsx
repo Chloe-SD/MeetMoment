@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   greeting: {
-    color: '#FFF',
+    color: '#3D90E3',
     fontSize: 16,
   },
 });

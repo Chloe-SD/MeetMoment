@@ -70,11 +70,6 @@ const RequestsScreen = () => {
 
   return !selectedMeeting? (
     <View style={styles.container}>
-      <View style={styles.profileContainer}>
-        <View style={styles.profileText}>
-          <Text style={styles.greeting}>Hi, {user?.name}</Text>
-        </View>
-      </View>
       <Text style={styles.title}>{user?.name}'s Requests</Text>
       <View style={styles.searchContainer}>
         <TextInput
