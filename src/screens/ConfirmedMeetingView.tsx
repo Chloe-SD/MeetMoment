@@ -117,7 +117,7 @@ function getCommonAvailability(meeting: Meeting): Day[] {
       available: participantAvailabilities.every(
         pa => pa[dayIndex]?.blocks[blockIndex]?.available
       ),
-      selectable: false, // Make sure blocks are not selectable in this view
+      
     })),
   }));
 }
