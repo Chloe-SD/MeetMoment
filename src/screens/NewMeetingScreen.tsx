@@ -166,7 +166,15 @@ const NewMeetingScreen = () => {
   const renderItem = ({item}: {item: any}) => {
     switch (item.type) {
       case 'title':
-        return <Text style={styles.title}>New Meeting</Text>;
+        return (
+          <View style={styles.topContainer}>
+            <Text style={styles.title}>New Meeting</Text>
+            <Pressable style={styles.clearButton}
+            onPress={() => refreshPage()}>
+              <Text style={styles.text}>Clear Form</Text>
+            </Pressable>
+          </View>
+        );
       case 'titleInput':
         return (
           <MeetingTitleInput
@@ -292,7 +300,6 @@ const styles = StyleSheet.create({
     color: '#174e87',
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
   },
   container: {
     flexGrow: 1,
@@ -326,6 +333,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '600',
   },
+  topContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  clearButton: {
+    backgroundColor: '#3D90E3',
+    width: 120,
+    height: 40,
+    padding: 2,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignContent: 'flex-end',
+  }
 });
 
 export default NewMeetingScreen;

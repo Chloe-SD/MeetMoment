@@ -35,6 +35,7 @@ const DateRangePicker = ({
       }
     };
 
+  
   return (
     <View>
       <View style={styles.datePickerContainer}>
@@ -62,7 +63,8 @@ const DateRangePicker = ({
         <Text style={styles.dateText}>{endDate.toDateString()}</Text>
         {showEndPicker && (
           <DateTimePicker
-            minimumDate={new Date()}
+            minimumDate={startDate}
+            maximumDate={new Date(startDate.getTime() + (24 * 60 * 60 * 1000* 10) )}
             value={endDate}
             mode="date"
             display="default"
