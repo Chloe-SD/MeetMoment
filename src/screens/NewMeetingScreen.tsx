@@ -194,7 +194,6 @@ const NewMeetingScreen = () => {
             setStartDate={setStartDate}
             setEndDate={setEndDate}
           />
-          <View><Text>endDate {endDate.toDateString()}</Text></View>
         </View>
           
         );
