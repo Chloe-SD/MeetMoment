@@ -100,20 +100,22 @@ export default function ConfirmedMeetingView({ meeting, onClose }: ConfirmedMeet
 }
 
 function getCommonAvailability(meeting: Meeting): Day[] {
+  // Copy the participant list - filtering out anyone who has NOT confirmed their availability
   const confirmedParticipants = meeting.participants.filter(p => p.status === 'confirmed');
-  
+  // return nothing is no one is confirmed
   if (confirmedParticipants.length === 0) return [];
-
+  // get the availabilities from each CONFIRMED participant
   const participantAvailabilities = confirmedParticipants
     .map(p => p.participantAvailability)
     .filter(pa => pa !== undefined && pa.length > 0);
-
+  // again return none if no one has availabilities defined
   if (participantAvailabilities.length === 0) return [];
-
+  // Create a brand new Days array. // copying the blocks from the original
   return participantAvailabilities[0].map((day, dayIndex) => ({
     date: day.date,
     blocks: day.blocks.map((block, blockIndex) => ({
-      ...block,
+      ...block, // unpack eac block object and ONLY set it TRUE if EVER PARTICIPANT
+      //also had this block selected as TRUE (available)
       available: participantAvailabilities.every(
         pa => pa[dayIndex]?.blocks[blockIndex]?.available
       ),

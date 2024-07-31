@@ -36,13 +36,10 @@ export async function RemoveParticipant(meetingId: string, email: string): Promi
       const data = meetingDoc.data();
       const participants = data?.participants || [];
       const participantAvailability = data?.participantAvailability || {};
-
       // Remove the participant from the participants array
       const updatedParticipants = participants.filter((participant: { email: string }) => participant.email !== email);
-
       // Remove the participant's availability
       const { [email]: _, ...updatedParticipantAvailability } = participantAvailability;
-
       // Update the meeting document with the new participants and participantAvailability
       await meetingRef.update({ 
         participants: updatedParticipants,

@@ -6,7 +6,7 @@ import {
   Pressable,
   Text,
   View,
-  ToastAndroid,
+  Alert,
 } from 'react-native';
 import {Meeting, Participant, Day, TimeBlock} from '../types';
 import MeetingTitleInput from '../components/MeetingTitleInput';
@@ -18,6 +18,7 @@ import {useUser} from '../context/UserContext';
 import {SaveMeetingToDatabase} from '../utils/DataManager';
 import MeetingTitleValidation from '../components/MeetingTitleValidation';
 import ParticipantValidation from '../components/ParticipantValidation';
+
 
 const NewMeetingScreen = () => {
   const {user} = useUser();
@@ -60,8 +61,8 @@ const NewMeetingScreen = () => {
     setMeeting(newMeeting);
   };
 
-  const saveMeetingToDB = async () => {
-    if (!meeting || !user) return;
+  const saveMeetingToDB = async (): Promise<boolean> => {
+    if (!meeting || !user) return false;
     const meetingToSave: Meeting = {
       id: meeting.id,
       creatorEmail: meeting.creatorEmail,
@@ -73,41 +74,69 @@ const NewMeetingScreen = () => {
     try {
       await SaveMeetingToDatabase(meetingToSave);
       console.log('Meeting saved successfully!');
+      return true;
     } catch (error) {
       console.error('Error saving meeting:', error);
+      return false;
     }
   };
 
-  const generateTimeBlocks = (date: string): TimeBlock[] => {
+  const handleSubmit = async () => {
+    const success = await saveMeetingToDB();
+    if (success) {
+      Alert.alert(
+        "Success",
+        "Meeting saved successfully!",
+        [
+          { text: "OK", onPress: () => {
+            refreshPage(); // Clear the state
+          }}
+        ]
+      );
+    } else {
+      Alert.alert("Error", "Failed to save meeting. Please try again.");
+    }
+  };
+
+  const refreshPage = () => {
+      setTitle('');
+      setParticipantList([]);
+      setStartDate(new Date());
+      setEndDate(new Date());
+      setMeeting(null);
+      setTitleInputTouched(false);
+      setParticipantInputTouched(false);
+  }
+
+  const generateTimeBlocks = (): TimeBlock[] => {
     let blocks: TimeBlock[] = [];
-    let current = new Date(`${date}T07:00:00`); // Start at 7 AM
-    const endTime = new Date(`${date}T20:00:00`); // End at 8 PM
-
-    while (current < endTime) {
-      const start = current.toTimeString().slice(0, 5);
-      current.setHours(current.getHours() + 1);
-      const end = current.toTimeString().slice(0, 5);
-
+    const startHour = 7;
+    const endHour = 20; // Up to but not including 20:00
+  
+    for (let hour = startHour; hour < endHour; hour++) {
+      const start = `${hour.toString().padStart(2, '0')}:00`;
+      const end = `${(hour + 1).toString().padStart(2, '0')}:00`;
+  
       blocks.push({
         start,
         end,
         available: false,
-        selectable: true, // All blocks are selectable for the creator
+        selectable: true,
       });
     }
-
+  
     return blocks;
   };
 
   const generateDays = (start: Date, end: Date): Day[] => {
     let days: Day[] = [];
-    let current = new Date(startDate); // make copy of startDate to iterate over
-
-    while (current <= endDate) {
-      const dateStr = current.toDateString();
+    let current = new Date(start);
+  
+    while (current <= end) {
+      const dateStr = current.toDateString(); // YYYY-MM-DD format
       days.push({
         date: dateStr,
-        blocks: generateTimeBlocks(dateStr),
+        blocks: generateTimeBlocks(),
       });
       current.setDate(current.getDate() + 1);
     }
@@ -214,7 +243,7 @@ const NewMeetingScreen = () => {
             shouldDisableSaveButton={shouldDisableSaveButton()}
             meeting={meeting}
             onBlockToggle={handleBlockToggle}
-            onSaveMeeting={saveMeetingToDB}
+            onSaveMeeting={handleSubmit}
           />
         ) : null;
       default:
