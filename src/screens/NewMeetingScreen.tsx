@@ -62,9 +62,16 @@ const NewMeetingScreen = () => {
 
   const saveMeetingToDB = async () => {
     if (!meeting || !user) return;
-
+    const meetingToSave: Meeting = {
+      id: meeting.id,
+      creatorEmail: meeting.creatorEmail,
+      participants: [...participantList, {email: meeting.creatorEmail, status: "confirmed", participantAvailability: meeting.days}],
+      days: meeting.days,
+      title: title,
+      status: 'pending',
+    }
     try {
-      await SaveMeetingToDatabase(meeting);
+      await SaveMeetingToDatabase(meetingToSave);
       console.log('Meeting saved successfully!');
     } catch (error) {
       console.error('Error saving meeting:', error);
@@ -94,18 +101,16 @@ const NewMeetingScreen = () => {
 
   const generateDays = (start: Date, end: Date): Day[] => {
     let days: Day[] = [];
-    let current = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-    let endDate = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+    let current = new Date(startDate); // make copy of startDate to iterate over
 
     while (current <= endDate) {
-      const dateStr = current.toISOString().split('T')[0];
+      const dateStr = current.toDateString();
       days.push({
         date: dateStr,
         blocks: generateTimeBlocks(dateStr),
       });
       current.setDate(current.getDate() + 1);
     }
-
     return days;
   };
 
@@ -182,12 +187,16 @@ const NewMeetingScreen = () => {
 
       case 'dateRangePicker':
         return (
+        <View>
           <DateRangePicker
             startDate={startDate}
             endDate={endDate}
             setStartDate={setStartDate}
             setEndDate={setEndDate}
           />
+          <View><Text>endDate {endDate.toDateString()}</Text></View>
+        </View>
+          
         );
       case 'selectTimeButton':
         return (

@@ -90,7 +90,12 @@ const HomeScreen = () => {
         value={searchText}
         onChangeText={setSearchText}
       />
-      <FlatList
+      {meetings.length == 0? (
+        <View>
+          <Text>You Have no meetings</Text>
+        </View>
+      ):(
+        <FlatList
         data={filteredMeetings}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
@@ -108,7 +113,7 @@ const HomeScreen = () => {
             </TouchableOpacity>
           </TouchableOpacity>
         )}
-      />
+      />)}
     </View>
   ) : (
     <ConfirmedMeetingView meeting={selectedMeeting} onClose={handleCloseMeetingView} />
