@@ -113,8 +113,9 @@ const RequestsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 20,
     backgroundColor: '#FFFFFF',
+    paddingTop: 10,
   },
   header: {
     fontSize: 14,
@@ -137,6 +138,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   title: {
+    color: '#174e87',
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,

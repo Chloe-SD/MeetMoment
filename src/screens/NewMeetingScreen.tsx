@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 20,
     backgroundColor: '#FFFFFF',
-    paddingTop: 5,
+    paddingTop: 10,
   },
   disabledButton: {
     backgroundColor: 'grey',
@@ -339,9 +339,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   clearButton: {
-    backgroundColor: '#3D90E3',
+    backgroundColor: '#3dbae3',
     width: 120,
-    height: 40,
+    height: 50,
     padding: 2,
     borderRadius: 5,
     justifyContent: 'center',

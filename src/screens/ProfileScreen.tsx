@@ -58,17 +58,19 @@ const ProfileScreen = () => {
 
 const styles = StyleSheet.create({
   title: {
+    color: '#174e87',
     fontSize: 24,
-    marginBottom: 16,
+    fontWeight: 'bold',
   },
   container: {
     flexGrow: 1,
     padding: 20,
     backgroundColor: '#FFFFFF',
-    paddingTop: 5,
+    paddingTop: 10,
   },
   info: {
     fontSize: 18,
+    marginTop: 10,
     marginBottom: 8,
   },
   input: {
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
   },
   updateButton: {
     backgroundColor: '#3D90E3',
-    width: 150,
+    width: 130,
     height: 50,
     padding: 3,
     marginTop: 10,

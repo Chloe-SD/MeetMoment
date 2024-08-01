@@ -44,7 +44,6 @@ const ParticipantInput = ({
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    marginBottom: 16,
   },
   input: {
     flex: 1,
@@ -57,7 +56,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#3D90E3',
-    width: 80,
+    width: 60,
     height: 50,
     padding: 3,
     borderRadius: 5,
@@ -65,7 +64,7 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: 'grey',
-    width: 80,
+    width: 60,
     height: 50,
     padding: 3,
     borderRadius: 5,

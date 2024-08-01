@@ -1,6 +1,6 @@
 // src/screens/MeetingView.tsx
 import React, { useState, useEffect } from 'react';
-import { Button, Text, SafeAreaView, ScrollView, StyleSheet, Alert } from "react-native";
+import { Button, Text, SafeAreaView, ScrollView, StyleSheet, Alert, Pressable } from "react-native";
 import { Meeting, Day, Participant } from "../types";
 import TimeBlockSelector from "../components/TimeBlockSelector";
 import { useUser } from '../context/UserContext';
@@ -84,8 +84,12 @@ export default function MeetingView({ meeting, onClose }: { meeting: Meeting; on
           days={localDays}
           onBlockToggle={handleBlockToggle}
         />
-        <Button title="Submit Availability" onPress={handleSubmit} />
-        <Button title="Back" onPress={onClose} />
+        <Pressable style={styles.submitButton}onPress={handleSubmit}>
+          <Text style={styles.text}>SUBMIT AVAILABILITY</Text>
+        </Pressable>
+        <Pressable style={styles.backButton} onPress={onClose}>
+        <Text style={styles.text}>BACK</Text>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
@@ -97,9 +101,40 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     padding: 16,
+    
   },
   meetingTitle: {
-    fontSize: 18,
+    color: '#174e87',
+    fontSize: 24, 
     marginBottom: 20,
+    fontWeight: 'bold',
+
   },
+  submitButton: {
+    backgroundColor: '#3D90E3',
+    width: 200,
+    height: 50,
+    padding: 3,
+    marginTop: 20,
+    borderRadius: 5,
+    justifyContent: 'center',
+    margin: 'auto',
+  },
+  backButton: {
+    backgroundColor: '#2a649e',
+    width: 80,
+    height: 50,
+    padding: 3,
+    marginTop: 20,
+    borderRadius: 5,
+    justifyContent: 'center',
+    margin: 'auto',
+  },
+  text: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: '600',
+  }
+
 });

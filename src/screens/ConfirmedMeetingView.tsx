@@ -1,6 +1,6 @@
 // src/components/ConfirmedMeetingView.tsx
 import React, { useMemo, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity, Modal, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity, Modal, ScrollView, SafeAreaView, Pressable } from 'react-native';
 import { Meeting, Day, Participant } from '../types';
 import TimeBlockSelector from '../components/TimeBlockSelector';
 
@@ -61,7 +61,9 @@ export default function ConfirmedMeetingView({ meeting, onClose }: ConfirmedMeet
       case 'footer':
         return (
           <View style={styles.buttonContainer}>
-            <Button title="Close" onPress={onClose} />
+            <Pressable style={styles.button} onPress={onClose}>
+              <Text style={styles.text}>CLOSE</Text>
+            </Pressable>
           </View>
         );
       default:
@@ -91,7 +93,9 @@ export default function ConfirmedMeetingView({ meeting, onClose }: ConfirmedMeet
               days={selectedParticipant?.participantAvailability || []} 
               onBlockToggle={() => {}} 
             />
-            <Button title="Close" onPress={closeParticipantModal} />
+            <Pressable style={styles.button} onPress={closeParticipantModal}>
+              <Text style={styles.text}>CLOSE</Text>
+            </Pressable>
           </View>
         </View>
       </Modal>
@@ -129,12 +133,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    padding: 16,
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 5,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: '#174e87'
   },
   status: {
     fontSize: 16,
@@ -178,5 +186,21 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 12,
+  },
+  button: {
+    backgroundColor: '#3D90E3',
+    width: 80,
+    height: 50,
+    padding: 3,
+    marginTop: 30,
+    borderRadius: 5,
+    justifyContent: 'center',
+    margin: 'auto',
+  },
+  text: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: '600',
   },
 });
