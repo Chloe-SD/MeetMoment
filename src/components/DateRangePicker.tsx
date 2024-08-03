@@ -36,71 +36,87 @@ const DateRangePicker = ({
     };
 
   
-  return (
-    <View>
+    return (
       <View style={styles.datePickerContainer}>
-        <Pressable
-          style={styles.button}
-          onPress={() => showDatePicker('start')}>
-          <Text style={styles.buttonText}>Select Start Date</Text>
-        </Pressable>
-
-        <Text style={styles.dateText}>{startDate.toDateString()}</Text>
-        {showStartPicker && (
-          <DateTimePicker
-            minimumDate={new Date()}
-            value={startDate}
-            mode="date"
-            display="default"
-            onChange={onChangeDate(setStartDate, setShowStartPicker)}
-          />
-        )}
+        <View>
+          <Pressable
+            style={styles.startButton}
+            onPress={() => showDatePicker('start')}>
+            <Text style={styles.buttonText}>Start Date</Text>
+          </Pressable>
+  
+          <Text style={styles.dateText}>{startDate.toDateString()}</Text>
+          {showStartPicker && (
+            <DateTimePicker
+              minimumDate={new Date()}
+              value={startDate}
+              mode="date"
+              display="default"
+              onChange={onChangeDate(setStartDate, setShowStartPicker)}
+            />
+          )}
+        </View>
+        <View>
+          <Pressable
+            style={styles.endButton}
+            onPress={() => showDatePicker('end')}>
+            <Text style={styles.buttonText}>End Date</Text>
+          </Pressable>
+          <Text style={styles.dateText}>{endDate.toDateString()}</Text>
+          {showEndPicker && (
+            <DateTimePicker
+              minimumDate={startDate}
+              maximumDate={
+                new Date(startDate.getTime() + 24 * 60 * 60 * 1000 * 10)
+              }
+              value={endDate}
+              mode="date"
+              display="default"
+              onChange={onChangeDate(setEndDate, setShowEndPicker)}
+            />
+          )}
+        </View>
       </View>
-      <View style={styles.datePickerContainer}>
-        <Pressable style={styles.button} onPress={() => showDatePicker('end')}>
-          <Text style={styles.buttonText}>Select End Date</Text>
-        </Pressable>
-        <Text style={styles.dateText}>{endDate.toDateString()}</Text>
-        {showEndPicker && (
-          <DateTimePicker
-            minimumDate={startDate}
-            maximumDate={new Date(startDate.getTime() + (24 * 60 * 60 * 1000* 10) )}
-            value={endDate}
-            mode="date"
-            display="default"
-            onChange={onChangeDate(setEndDate, setShowEndPicker)}
-          />
-        )}
-      </View>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  datePickerContainer: {
-    marginBottom: 16,
-  },
-  button: {
-    backgroundColor: '#3D90E3',
-    width: 150,
-    height: 50,
-    padding: 3,
-    marginTop: 30,
-    borderRadius: 5,
-    justifyContent: 'center',
-    margin: 'auto',
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    textAlign: 'center',
-    fontWeight: '600',
-  },
-  dateText: {
-    fontSize: 14,
-    textAlign: 'center',
-    justifyContent: 'center',
-  },
-});
-
-export default DateRangePicker;
+    );
+  };
+  
+  const styles = StyleSheet.create({
+    datePickerContainer: {
+      marginBottom: 16,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+    },
+  
+    startButton: {
+      backgroundColor: '#3D90E3',
+      width: 100,
+      height: 50,
+      padding: 3,
+      marginTop: 30,
+      justifyContent: 'space-evenly',
+      borderRadius: 5,
+    },
+    endButton: {
+      backgroundColor: '#3D90E3',
+      width: 100,
+      height: 50,
+      padding: 3,
+      marginTop: 30,
+      borderRadius: 5,
+      justifyContent: 'space-evenly',
+    },
+    buttonText: {
+      color: '#FFFFFF',
+      fontSize: 16,
+      textAlign: 'center',
+      fontWeight: '600',
+    },
+    dateText: {
+      fontSize: 14,
+      textAlign: 'center',
+      justifyContent: 'center',
+    },
+  });
+  
+  export default DateRangePicker;
