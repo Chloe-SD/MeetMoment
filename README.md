@@ -1,79 +1,57 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+**MEETMOMENT APPLICATION** 
+A React Native application that aims to simplify the management of schedules and meetings. The app offers a user-friendly interface for creating, searching, and managing meetings, making it easier to coordinate and plan events. 
+Authenticate is done by registering through the application which ensures users for a secured and personalized access to their account information
 
-# Getting Started
+The application is useful as it addresses the common challenge of managing multiple meetings and schedules, espcially having a large form of group.
+Through a comprehensive and interactive intreface, the application simplifies the process of creating, synchronizing and managing meeting times for n number of members involved. 
+Users are able to quickly define their availability, find relevant meetings, and handle meeting requests, all within a single platform not only saving time but also enhancing productivity and seemless organization of the task/event
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+**FEATURES**
 
-## Step 1: Start the Metro Server
+The applicaton includes user profile management, meeting creation, and schedule management. 
+Additionally, they have the capability to delete meetings if they are the creator or opt out of meetings they were invited to, ensuring complete control over their schedules and commitments.
+Users are able to create new meetings by initially selecting the date range and specifying their available time (60 minutes interval per block).
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+The application contains four(4) screens:
+- Home screen which displays the list of meetings and its delete functionality.
+- NewMeeting screen provides a comprehensive interface for creating new meetings, including date selection and time block management.
+- Requests screen that shows meeting requests, supports search functionality, and accepts meeting code invitations through the text field .
+- Profile screen displays user profile information and includes a logout option.
 
-To start Metro, run the following command from the _root_ of your React Native project:
+**Technology Used includes the following:**
 
-```bash
-# using npm
-npm start
+- Firebase Native Login: Authentication using email and password.
+- Firestore Database: Storing user and meeting details.
+- React Native CLI: For building and running the React Native application.
+- Android Studio: For Android development and testing.
 
-# OR using Yarn
-yarn start
-```
+**Installlation**
 
-## Step 2: Start your Application
+cloning the repository through
+- git clone https://github.com/Chloe-SD/MeetMoment.git
+- navigate through the project file
+- open command prompt
+- type in npm install or npm i
+- npm start
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+The developers has utilized the Metro server and Android Studio for the development of the application
 
-### For Android
+PreRequisites
+-React Native CLI
+-Android Studio 
 
-```bash
-# using npm
-npm run android
 
-# OR using Yarn
-yarn android
-```
 
-### For iOS
 
-```bash
-# using npm
-npm run ios
 
-# OR using Yarn
-yarn ios
-```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
 
-## Step 3: Modifying your App
 
-Now that you have successfully run the app, let's modify it.
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
 
-## Congratulations! :tada:
 
-You've successfully run and modified your React Native App. :partying_face:
 
-### Now what?
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
 
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
