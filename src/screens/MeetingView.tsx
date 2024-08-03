@@ -85,7 +85,7 @@ export default function MeetingView({ meeting, onClose }: { meeting: Meeting; on
           onBlockToggle={handleBlockToggle}
         />
         <Pressable style={styles.submitButton}onPress={handleSubmit}>
-          <Text style={styles.text}>SUBMIT AVAILABILITY</Text>
+          <Text style={styles.text}>Submit Availability</Text>
         </Pressable>
         <Pressable style={styles.backButton} onPress={onClose}>
         <Text style={styles.text}>BACK</Text>
@@ -101,18 +101,16 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     padding: 16,
-    
   },
   meetingTitle: {
     color: '#174e87',
     fontSize: 24, 
     marginBottom: 20,
     fontWeight: 'bold',
-
   },
   submitButton: {
     backgroundColor: '#3D90E3',
-    width: 200,
+    width: 180,
     height: 50,
     padding: 3,
     marginTop: 20,
@@ -135,6 +133,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     fontWeight: '600',
-  }
-
+  },
 });

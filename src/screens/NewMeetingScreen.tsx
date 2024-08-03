@@ -318,8 +318,8 @@ const styles = StyleSheet.create({
     margin: 'auto',
   },
   button: {
-    backgroundColor: '#3D90E3',
-    width: 150,
+    backgroundColor: '#64A6E9',
+    width: 120,
     height: 50,
     padding: 3,
     marginTop: 30,
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: 'center',
     alignContent: 'flex-end',
-  }
+  },
 });
 
 export default NewMeetingScreen;

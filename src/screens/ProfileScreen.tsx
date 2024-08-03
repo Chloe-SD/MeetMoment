@@ -40,15 +40,17 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>User Profile</Text>
       <Text style={styles.info}>Email: {user.email}</Text>
-      <TextInput
-        style={styles.input}
-        value={newName}
-        onChangeText={setNewName}
-        placeholder="Enter new name"
-      />
-      <Pressable style={styles.updateButton} onPress={handleUpdateName}>
-        <Text style={styles.buttonText}>Update Name</Text>
-      </Pressable>
+      <View style={styles.userContainer}>
+        <TextInput
+          style={styles.input}
+          value={newName}
+          onChangeText={setNewName}
+          placeholder="Enter new name"
+        />
+        <Pressable style={styles.updateButton} onPress={handleUpdateName}>
+          <Text style={styles.buttonText}>Update Name</Text>
+        </Pressable>
+      </View>
       <Pressable style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.buttonText}>LOGOUT</Text>
       </Pressable>
@@ -73,8 +75,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 8,
   },
+
+  userContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+
   input: {
-    width: '100%',
+    width: '60%',
     padding: 10,
     marginVertical: 10,
     borderColor: 'gray',
@@ -92,7 +101,7 @@ const styles = StyleSheet.create({
     margin: 'auto',
   },
   logoutButton: {
-    backgroundColor: '#3D90E3',
+    backgroundColor: '#2a649e',
     width: 100,
     height: 50,
     padding: 3,

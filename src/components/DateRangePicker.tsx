@@ -35,14 +35,13 @@ const DateRangePicker = ({
       }
     };
 
-  
   return (
-    <View>
-      <View style={styles.datePickerContainer}>
+    <View style={styles.datePickerContainer}>
+      <View>
         <Pressable
-          style={styles.button}
+          style={styles.startButton}
           onPress={() => showDatePicker('start')}>
-          <Text style={styles.buttonText}>Select Start Date</Text>
+          <Text style={styles.buttonText}>Start Date</Text>
         </Pressable>
 
         <Text style={styles.dateText}>{startDate.toDateString()}</Text>
@@ -56,15 +55,19 @@ const DateRangePicker = ({
           />
         )}
       </View>
-      <View style={styles.datePickerContainer}>
-        <Pressable style={styles.button} onPress={() => showDatePicker('end')}>
-          <Text style={styles.buttonText}>Select End Date</Text>
+      <View>
+        <Pressable
+          style={styles.endButton}
+          onPress={() => showDatePicker('end')}>
+          <Text style={styles.buttonText}>End Date</Text>
         </Pressable>
         <Text style={styles.dateText}>{endDate.toDateString()}</Text>
         {showEndPicker && (
           <DateTimePicker
             minimumDate={startDate}
-            maximumDate={new Date(startDate.getTime() + (24 * 60 * 60 * 1000* 10) )}
+            maximumDate={
+              new Date(startDate.getTime() + 24 * 60 * 60 * 1000 * 10)
+            }
             value={endDate}
             mode="date"
             display="default"
@@ -79,16 +82,28 @@ const DateRangePicker = ({
 const styles = StyleSheet.create({
   datePickerContainer: {
     marginBottom: 16,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
   },
-  button: {
+
+  startButton: {
     backgroundColor: '#3D90E3',
-    width: 150,
+    width: 100,
+    height: 50,
+    padding: 3,
+    marginTop: 30,
+    justifyContent: 'space-evenly',
+    borderRadius: 5,
+  },
+  endButton: {
+    backgroundColor: '#3D90E3',
+    width: 100,
     height: 50,
     padding: 3,
     marginTop: 30,
     borderRadius: 5,
-    justifyContent: 'center',
-    margin: 'auto',
+    justifyContent: 'space-evenly',
   },
   buttonText: {
     color: '#FFFFFF',
