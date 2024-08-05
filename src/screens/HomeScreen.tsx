@@ -25,6 +25,7 @@ const HomeScreen = () => {
   }, []);
 
   const fetchMeetings = async () => {
+    if (!user){return};
     try {
       const fetchedMeetings = await FetchMeetings();
       const filteredMeetings = fetchedMeetings.filter(

@@ -15,7 +15,7 @@ import {useUser} from '../context/UserContext';
 import { FetchUserData, CreateUserDocument } from '../utils/DataManager';
 
 const LoginScreen = () => {
-  const {setUser} = useUser();
+  const {user, setUser} = useUser();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -28,7 +28,11 @@ const LoginScreen = () => {
       );
       const firebaseUser = userCredential.user;
       const userData = await FetchUserData(firebaseUser.uid);
-      setUser(userData);
+      setUser({...user,
+        email: userData.email,
+        id: userData.id,
+        name: userData.name
+      });
     } catch (error: unknown) {
       if (error instanceof Error) {
         Alert.alert('Login failed', error.message);
