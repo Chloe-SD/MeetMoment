@@ -58,7 +58,9 @@ const ProfileScreen = () => {
 
 const styles = StyleSheet.create({
   title: {
+    color: '#174e87',
     fontSize: 24,
+    fontWeight: 'bold',
     marginBottom: 16,
   },
   container: {
