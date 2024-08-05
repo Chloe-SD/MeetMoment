@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import {useUser} from '../context/UserContext';
-import {FetchMeetings} from '../utils/DataManager';
+import {FetchMeetings, RemoveParticipant} from '../utils/DataManager';
 import {Meeting} from '../types';
 import MeetingView from './MeetingView';
 
@@ -20,7 +20,6 @@ const RequestsScreen = () => {
   const {user} = useUser();
   const [search, setSearch] = useState('');
   const [code, setCode] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
 
@@ -47,20 +46,43 @@ const RequestsScreen = () => {
   const handleMeetingClick = (meeting: Meeting) => {
     // Handle meeting click, possibly open a detailed view
     setSelectedMeeting(meeting);
-    
+  };
+
+  const handleDelete = (meeting: Meeting) => {
+    if (!user) {
+      return;
+    }
+    Alert.alert(
+      'Leave Meeting',
+      'Are you sure you want to remove yourself from this meeting?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'OK',
+          onPress: async () => {
+            await RemoveParticipant(meeting.id, user.email);
+            setMeetings(prevMeetings =>
+              prevMeetings.filter(m => m.id !== meeting.id),
+            );
+          },
+        },
+      ],
+    );
   };
 
   const renderMeetingItem = ({item}: {item: Meeting}) => (
     <TouchableOpacity
       style={styles.meetingItem}
-      onPress={() => handleMeetingClick(item)}
-      key={item.id}>
+      onPress={() => handleMeetingClick(item)}>
       <View style={styles.meetingInfo}>
         <Text style={styles.meetingTitle}>{item.title}</Text>
         <Text style={styles.meetingCreator}>
           created by {item.creatorEmail}
         </Text>
       </View>
+      <TouchableOpacity onPress={() => handleDelete(item)}>
+        <Text style={styles.deleteButton}>✖</Text>
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 
@@ -68,7 +90,7 @@ const RequestsScreen = () => {
     setSelectedMeeting(null);
   };
 
-  return !selectedMeeting? (
+  return !selectedMeeting ? (
     <View style={styles.container}>
       <Text style={styles.title}>{user?.name}'s Requests</Text>
       <View style={styles.searchContainer}>
@@ -92,18 +114,6 @@ const RequestsScreen = () => {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.listContainer}
       />
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setModalVisible(false)}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World</Text>
-            <Button title="Close" onPress={() => setModalVisible(false)} />
-          </View>
-        </View>
-      </Modal>
     </View>
   ) : (
     <MeetingView meeting={selectedMeeting} onClose={handleCloseMeetingView} />
@@ -140,6 +150,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+    color: '#174e87',
   },
   searchContainer: {
     backgroundColor: '#f0f0f0',
@@ -162,6 +173,8 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   meetingItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#ebf4fc',
     borderRadius: 8,
     padding: 16,
@@ -195,6 +208,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+  },
+  deleteButton: {
+    fontSize: 18,
+    color: 'red',
+    marginLeft: 16,
   },
 });
 

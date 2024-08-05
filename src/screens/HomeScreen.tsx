@@ -25,6 +25,7 @@ const HomeScreen = () => {
   }, []);
 
   const fetchMeetings = async () => {
+    if (!user){return};
     try {
       const fetchedMeetings = await FetchMeetings();
       const filteredMeetings = fetchedMeetings.filter(
@@ -48,26 +49,39 @@ const HomeScreen = () => {
         Alert.alert("Error", "User email is not defined.");
         return;
     }
-    Alert.alert(
-        "Delete Meeting",
-        "Are you sure you want to delete this meeting?",
-        [
-            {text: "Cancel", style: "cancel"},
-            { text: "OK", onPress: async () => {
-                try {
-                    if (meeting.creatorEmail === user.email) {
-                        await DeleteMeeting(meeting.id);
-                        setMeetings(prevMeetings => prevMeetings.filter(m => m.id !== meeting.id));
-                    } else {
-                        await RemoveParticipant(meeting.id, user.email);
-                        setMeetings(prevMeetings => prevMeetings.filter(m => m.id !== meeting.id));
-                    }
-                } catch (error) {
-                    Alert.alert("Error", "Failed to delete meeting. Please try again.");
-                }
-            }}
-        ]
-    );
+    try {
+      if (meeting.creatorEmail === user.email) {
+        
+        Alert.alert(
+          "Delete Meeting",
+          "Are you sure you want to delete this meeting?",
+            [
+                {text: "Cancel", style: "cancel"},
+                { text: "OK", onPress: async () => {
+                  await DeleteMeeting(meeting.id);
+                  setMeetings(prevMeetings => prevMeetings.filter(m => m.id !== meeting.id));
+                }}
+            ]
+        );
+          
+      } else {
+        Alert.alert(
+          "Leave Meeting",
+          "Are you sure you want to remove yourself from this meeting?",
+            [
+                {text: "Cancel", style: "cancel"},
+                { text: "OK", onPress: async () => {
+                  await RemoveParticipant(meeting.id, user.email);
+                  setMeetings(prevMeetings => prevMeetings.filter(m => m.id !== meeting.id));
+                }}
+            ]
+        );
+          
+      }
+    } catch (error) {
+        Alert.alert("Error", "Failed to delete meeting. Please try again.");
+    }
+    
 };
 
   const filteredMeetings = meetings.filter(meeting =>

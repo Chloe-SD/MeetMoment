@@ -11,7 +11,7 @@ interface TimeBlockSelectorProps {
 
 const TimeBlockSelector: React.FC<TimeBlockSelectorProps> = ({ days, onBlockToggle }) => {
   return (
-    <FlatList
+    <FlatList style={styles.container}
       data={days}
       keyExtractor={(item) => item.date}
       renderItem={({ item, index }) => (
@@ -29,6 +29,8 @@ const TimeBlockSelector: React.FC<TimeBlockSelectorProps> = ({ days, onBlockTogg
 const styles = StyleSheet.create({
   container: {
     marginVertical: 16,
+    alignSelf: 'center'
+    
   },
 });
 
