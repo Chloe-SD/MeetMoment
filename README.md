@@ -1,57 +1,87 @@
-**MEETMOMENT APPLICATION** 
-A React Native application that aims to simplify the management of schedules and meetings. The app offers a user-friendly interface for creating, searching, and managing meetings, making it easier to coordinate and plan events. 
-Authenticate is done by registering through the application which ensures users for a secured and personalized access to their account information
+# MeetMoment - Android Scheduling Application
 
-The application is useful as it addresses the common challenge of managing multiple meetings and schedules, espcially having a large form of group.
-Through a comprehensive and interactive intreface, the application simplifies the process of creating, synchronizing and managing meeting times for n number of members involved. 
-Users are able to quickly define their availability, find relevant meetings, and handle meeting requests, all within a single platform not only saving time but also enhancing productivity and seemless organization of the task/event
+**React Native mobile app for group scheduling with real-time availability matching**
 
-**FEATURES**
+📱 **Android App** | 🌐 **[Web Version](https://github.com/Chloe-SD/meetmoment-webapp)** | 🚀 **[Live Web Demo](https://meetmoment-webapp.vercel.app/)**
 
-The applicaton includes user profile management, meeting creation, and schedule management. 
-Additionally, they have the capability to delete meetings if they are the creator or opt out of meetings they were invited to, ensuring complete control over their schedules and commitments.
-Users are able to create new meetings by initially selecting the date range and specifying their available time (60 minutes interval per block).
+## 🚀 What It Does
 
-The application contains four(4) screens:
-- Home screen which displays the list of meetings and its delete functionality.
-- NewMeeting screen provides a comprehensive interface for creating new meetings, including date selection and time block management.
-- Requests screen that shows meeting requests, supports search functionality, and accepts meeting code invitations through the text field .
-- Profile screen displays user profile information and includes a logout option.
+Native Android application that simplifies group scheduling by finding common availability across multiple participants. Built with React Native and Firebase for seamless real-time collaboration.
 
-**Technology Used includes the following:**
+### Key Features
+- **Smart Meeting Creation** - Define date ranges and available time blocks (60-minute intervals)
+- **Real-Time Synchronization** - Live updates across all participants using Firebase
+- **Meeting Request System** - Send/receive invitations with unique meeting codes
+- **Complete Schedule Control** - Create, join, or leave meetings with full user autonomy
+- **Cross-Platform Sync** - Shared database with web application for platform flexibility
 
-- Firebase Native Login: Authentication using email and password.
-- Firestore Database: Storing user and meeting details.
-- React Native CLI: For building and running the React Native application.
-- Android Studio: For Android development and testing.
+## 🛠️ Technical Stack
 
-**Installlation**
+**Framework:** React Native CLI  
+**Database:** Firebase Firestore with real-time listeners  
+**Authentication:** Firebase Auth (email/password)  
+**Development:** Android Studio  
+**State Management:** React hooks with Firebase integration  
 
-cloning the repository through
-- git clone https://github.com/Chloe-SD/MeetMoment.git
-- navigate through the project file
-- open command prompt
-- type in npm install or npm i
-- npm start
+## 📱 App Architecture
 
-The developers has utilized the Metro server and Android Studio for the development of the application
+### Core Screens
+- **Home** - Meeting dashboard with delete/leave functionality
+- **New Meeting** - Comprehensive meeting creation with date and time selection
+- **Requests** - Meeting invitations with search and code-based joining
+- **Profile** - User management with secure logout
 
-PreRequisites
--React Native CLI
--Android Studio 
+### Key Algorithms
+- **Availability Processing** - Converts user time blocks into standardized format
+- **Real-Time Sync** - Firebase listeners maintain consistent state across devices
+- **Meeting Code System** - Unique identifiers for secure meeting access
 
+## 🔗 Cross-Platform Integration
 
+This Android app shares a unified Firebase backend with the **[MeetMoment web application](https://github.com/Chloe-SD/meetmoment-webapp)**, enabling:
+- **Seamless Platform Switching** - Access same meetings from web or mobile
+- **Real-Time Cross-Platform Updates** - Changes sync instantly between platforms
+- **Consistent User Experience** - Unified data model across all interfaces
 
+## 🚀 Development Setup
 
+### Prerequisites
+- React Native CLI
+- Android Studio
+- Node.js
 
+### Installation
+```bash
+# Clone repository
+git clone https://github.com/Chloe-SD/MeetMoment.git
+cd MeetMoment
 
+# Install dependencies
+npm install
 
+# Start Metro server
+npm start
 
+# Run on Android (in separate terminal)
+npx react-native run-android
+```
 
+## 👥 Team Development
 
+**Group Project** - Collaborative development with Jaeeun Lee, Chloe Nibali, and Donald Jans Uy  
+**Individual Contributions** - Algorithm design, Firebase integration, UI implementation  
+**Cross-Platform Extension** - Personal project expanding to web platform  
 
+## 🎯 Development Highlights
 
+**Complex State Management** - Real-time meeting data across multiple users  
+**Native Mobile Development** - React Native with platform-specific optimizations  
+**Backend Integration** - Firebase Firestore with authentication and real-time updates  
+**Team Collaboration** - Agile development with version control and code reviews  
 
+---
+
+**Tech Stack:** React Native, Firebase, Android Studio
 
 
 
